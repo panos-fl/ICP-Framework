@@ -13,8 +13,8 @@
   ::selection { background: #8B691430; }
   ::-webkit-scrollbar { width: 6px; height: 6px; }
   ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: #D8DADA; border-radius: 3px; }
-  ::-webkit-scrollbar-thumb:hover { background: #9CA3AF; }
+  ::-webkit-scrollbar-thumb { background: #D1D5DB; border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: #6B7280; }
 </style>
 </head>
 <body>
@@ -32,11 +32,11 @@ const C = {
   bg: "#FAFAF8",
   white: "#FFFFFF",
   navy: "#1B2A4A",
-  body: "#3D3D3D",
-  muted: "#6B7280",
-  subtle: "#9CA3AF",
-  light: "#E8E8E4",
-  card: "#F4F4F2",
+  body: "#1F2937",
+  muted: "#4B5563",
+  subtle: "#6B7280",
+  light: "#D1D5DB",
+  card: "#F3F4F6",
   accent: "#8B6914",
   warm: "#C4956A",
   green: "#2D6A4F",
@@ -775,16 +775,16 @@ const ICPFramework = function ICPFramework() {
       background: C.bg,
       minHeight: "100vh",
       color: C.body,
-      padding: "40px 24px"
+      padding: "48px 32px"
     }
   }, /*#__PURE__*/React.createElement("div", {
     style: {
-      maxWidth: 920,
+      maxWidth: 1080,
       margin: "0 auto 28px"
     }
   }, /*#__PURE__*/React.createElement("div", {
     style: {
-      fontSize: 10,
+      fontSize: 13,
       fontWeight: 700,
       letterSpacing: 4,
       color: C.accent,
@@ -793,7 +793,7 @@ const ICPFramework = function ICPFramework() {
     }
   }, "MARKETING STRATEGY"), /*#__PURE__*/React.createElement("h1", {
     style: {
-      fontSize: 28,
+      fontSize: 34,
       fontWeight: 700,
       color: C.navy,
       lineHeight: 1.15,
@@ -801,7 +801,7 @@ const ICPFramework = function ICPFramework() {
     }
   }, "Ideal Customer Profile: $1M+ Custom Agents"), /*#__PURE__*/React.createElement("p", {
     style: {
-      fontSize: 14,
+      fontSize: 17,
       color: C.muted,
       margin: 0,
       maxWidth: 700,
@@ -816,7 +816,7 @@ const ICPFramework = function ICPFramework() {
     }
   }, /*#__PURE__*/React.createElement("div", {
     style: {
-      fontSize: 10,
+      fontSize: 13,
       fontWeight: 700,
       color: C.warm,
       letterSpacing: 2,
@@ -825,7 +825,7 @@ const ICPFramework = function ICPFramework() {
     }
   }, "THE BUYER"), /*#__PURE__*/React.createElement("div", {
     style: {
-      fontSize: 13,
+      fontSize: 16,
       color: "rgba(255,255,255,0.85)",
       lineHeight: 1.6
     }
@@ -845,7 +845,7 @@ const ICPFramework = function ICPFramework() {
     }
   }, /*#__PURE__*/React.createElement("div", {
     style: {
-      fontSize: 10,
+      fontSize: 13,
       fontWeight: 700,
       color: C.red,
       fontFamily: SF,
@@ -853,7 +853,7 @@ const ICPFramework = function ICPFramework() {
     }
   }, "ROUTE 1: DIRECT"), /*#__PURE__*/React.createElement("div", {
     style: {
-      fontSize: 11.5,
+      fontSize: 14,
       color: "rgba(255,255,255,0.65)",
       lineHeight: 1.45
     }
@@ -867,7 +867,7 @@ const ICPFramework = function ICPFramework() {
     }
   }, /*#__PURE__*/React.createElement("div", {
     style: {
-      fontSize: 10,
+      fontSize: 13,
       fontWeight: 700,
       color: C.teal,
       fontFamily: SF,
@@ -875,7 +875,7 @@ const ICPFramework = function ICPFramework() {
     }
   }, "ROUTE 2: THROUGH THE GenAI LEADER"), /*#__PURE__*/React.createElement("div", {
     style: {
-      fontSize: 11.5,
+      fontSize: 14,
       color: "rgba(255,255,255,0.65)",
       lineHeight: 1.45
     }
@@ -888,7 +888,7 @@ const ICPFramework = function ICPFramework() {
     }
   }, /*#__PURE__*/React.createElement("label", {
     style: {
-      fontSize: 11,
+      fontSize: 14,
       fontWeight: 700,
       color: C.accent,
       letterSpacing: 2,
@@ -906,22 +906,22 @@ const ICPFramework = function ICPFramework() {
       borderRadius: 8,
       border: `1px solid ${C.light}`,
       background: C.white,
-      fontSize: 14,
+      fontSize: 17,
       color: C.navy,
       fontFamily: "inherit",
       outline: "none"
     }
   }), /*#__PURE__*/React.createElement("span", {
     style: {
-      fontSize: 12,
+      fontSize: 15,
       color: C.subtle,
       fontFamily: SF
     }
   }, scored, "/", total, " scored"))), verdict && /*#__PURE__*/React.createElement("div", {
     style: {
-      maxWidth: 920,
+      maxWidth: 1080,
       margin: "0 auto 20px",
-      padding: "16px 22px",
+      padding: "20px 26px",
       background: C.navy,
       borderRadius: 10,
       borderLeft: `5px solid ${verdict.color}`
@@ -935,7 +935,7 @@ const ICPFramework = function ICPFramework() {
     }
   }, /*#__PURE__*/React.createElement("span", {
     style: {
-      fontSize: 14,
+      fontSize: 17,
       fontWeight: 700,
       color: verdict.color,
       fontFamily: SF,
@@ -943,12 +943,12 @@ const ICPFramework = function ICPFramework() {
     }
   }, verdict.label), accountName && /*#__PURE__*/React.createElement("span", {
     style: {
-      fontSize: 13,
+      fontSize: 16,
       color: "rgba(255,255,255,0.5)"
     }
   }, accountName)), /*#__PURE__*/React.createElement("div", {
     style: {
-      fontSize: 13,
+      fontSize: 16,
       color: "rgba(255,255,255,0.75)",
       lineHeight: 1.6
     }
@@ -969,14 +969,14 @@ const ICPFramework = function ICPFramework() {
       }
     }, /*#__PURE__*/React.createElement("span", {
       style: {
-        fontSize: 10,
+        fontSize: 13,
         color: t.color,
         fontWeight: 700,
         fontFamily: SF
       }
     }, t.label.split("&")[0].trim()), /*#__PURE__*/React.createElement("span", {
       style: {
-        fontSize: 12,
+        fontSize: 15,
         color: "rgba(255,255,255,0.6)",
         marginLeft: 8,
         fontFamily: SF
@@ -984,7 +984,7 @@ const ICPFramework = function ICPFramework() {
     }, avg.toFixed(1), "/3")) : null;
   }))), /*#__PURE__*/React.createElement("div", {
     style: {
-      maxWidth: 920,
+      maxWidth: 1080,
       margin: "0 auto 20px",
       display: "flex",
       gap: 4
@@ -1007,7 +1007,7 @@ const ICPFramework = function ICPFramework() {
       cursor: "pointer",
       background: tab === t.id ? C.navy : C.white,
       color: tab === t.id ? C.white : C.muted,
-      fontSize: 13,
+      fontSize: 16,
       fontWeight: 600,
       fontFamily: SF,
       border: `1px solid ${tab === t.id ? C.navy : C.light}`,
@@ -1015,7 +1015,7 @@ const ICPFramework = function ICPFramework() {
     }
   }, t.label))), /*#__PURE__*/React.createElement("div", {
     style: {
-      maxWidth: 920,
+      maxWidth: 1080,
       margin: "0 auto"
     }
   }, tab === "dimensions" && /*#__PURE__*/React.createElement(React.Fragment, null, tiers.map(tier => {
@@ -1035,7 +1035,7 @@ const ICPFramework = function ICPFramework() {
       }
     }, /*#__PURE__*/React.createElement("div", {
       style: {
-        fontSize: 10,
+        fontSize: 13,
         fontWeight: 700,
         letterSpacing: 3,
         color: tier.color,
@@ -1049,14 +1049,14 @@ const ICPFramework = function ICPFramework() {
       }
     }), avg !== null && /*#__PURE__*/React.createElement("div", {
       style: {
-        fontSize: 10,
+        fontSize: 13,
         color: tier.color,
         fontFamily: SF,
         fontWeight: 600
       }
     }, "avg ", avg.toFixed(1), "/3")), /*#__PURE__*/React.createElement("div", {
       style: {
-        fontSize: 12.5,
+        fontSize: 15,
         color: C.muted,
         marginBottom: 14,
         lineHeight: 1.55
@@ -1082,7 +1082,7 @@ const ICPFramework = function ICPFramework() {
         }
       }, /*#__PURE__*/React.createElement("div", {
         style: {
-          padding: "14px 18px"
+          padding: "18px 22px"
         }
       }, /*#__PURE__*/React.createElement("div", {
         style: {
@@ -1104,20 +1104,20 @@ const ICPFramework = function ICPFramework() {
         }
       }, /*#__PURE__*/React.createElement("span", {
         style: {
-          fontSize: 11,
+          fontSize: 14,
           fontWeight: 700,
           color: tier.color,
           fontFamily: SF
         }
       }, dim.number, "."), /*#__PURE__*/React.createElement("span", {
         style: {
-          fontSize: 15,
+          fontSize: 18,
           fontWeight: 700,
           color: C.navy
         }
       }, dim.name), /*#__PURE__*/React.createElement("span", {
         style: {
-          fontSize: 10,
+          fontSize: 13,
           fontWeight: 600,
           color: C.warm,
           background: `${C.warm}10`,
@@ -1127,7 +1127,7 @@ const ICPFramework = function ICPFramework() {
         }
       }, dim.tagline)), /*#__PURE__*/React.createElement("div", {
         style: {
-          fontSize: 12.5,
+          fontSize: 15,
           color: C.muted,
           lineHeight: 1.5,
           marginLeft: 20
@@ -1143,7 +1143,7 @@ const ICPFramework = function ICPFramework() {
         }
       }, /*#__PURE__*/React.createElement("div", {
         style: {
-          fontSize: 12,
+          fontSize: 15,
           fontWeight: 700,
           color: scoreVal >= 2 ? C.green : scoreVal >= 1 ? C.orange : C.red,
           fontFamily: SF
@@ -1159,7 +1159,7 @@ const ICPFramework = function ICPFramework() {
         onClick: () => setScore(dim.id, s.value),
         style: {
           flex: 1,
-          padding: "8px 10px",
+          padding: "10px 14px",
           borderRadius: 6,
           cursor: "pointer",
           background: scoreVal === s.value ? `${s.value >= 2 ? C.green : s.value >= 1 ? C.orange : C.red}10` : C.card,
@@ -1168,14 +1168,14 @@ const ICPFramework = function ICPFramework() {
         }
       }, /*#__PURE__*/React.createElement("div", {
         style: {
-          fontSize: 11.5,
+          fontSize: 14,
           fontWeight: 600,
           color: scoreVal === s.value ? s.value >= 2 ? C.green : s.value >= 1 ? C.orange : C.red : C.navy,
           marginBottom: 2
         }
       }, s.value, " ", D, " ", s.label), /*#__PURE__*/React.createElement("div", {
         style: {
-          fontSize: 10,
+          fontSize: 13,
           color: C.muted,
           lineHeight: 1.4
         }
@@ -1190,14 +1190,14 @@ const ICPFramework = function ICPFramework() {
         }
       }, /*#__PURE__*/React.createElement("span", {
         style: {
-          fontSize: 10,
+          fontSize: 13,
           fontWeight: 600,
           color: C.accent,
           fontFamily: SF
         }
       }, isExp ? "Hide" : "Show", " signals & strategy"), /*#__PURE__*/React.createElement("span", {
         style: {
-          fontSize: 9,
+          fontSize: 12,
           color: C.subtle,
           transition: "transform 0.15s",
           transform: isExp ? "rotate(180deg)" : "rotate(0)"
@@ -1205,7 +1205,7 @@ const ICPFramework = function ICPFramework() {
       }, "\u25BE"))), isExp && /*#__PURE__*/React.createElement("div", {
         style: {
           borderTop: `1px dashed ${C.light}`,
-          padding: "14px 18px",
+          padding: "18px 22px",
           background: C.card
         }
       }, /*#__PURE__*/React.createElement("div", {
@@ -1214,7 +1214,7 @@ const ICPFramework = function ICPFramework() {
         }
       }, /*#__PURE__*/React.createElement("div", {
         style: {
-          fontSize: 9,
+          fontSize: 12,
           fontWeight: 700,
           color: C.accent,
           letterSpacing: 2,
@@ -1223,7 +1223,7 @@ const ICPFramework = function ICPFramework() {
         }
       }, "WHY THIS MATTERS"), /*#__PURE__*/React.createElement("div", {
         style: {
-          fontSize: 12.5,
+          fontSize: 15,
           color: C.body,
           lineHeight: 1.6
         }
@@ -1233,7 +1233,7 @@ const ICPFramework = function ICPFramework() {
         }
       }, /*#__PURE__*/React.createElement("div", {
         style: {
-          fontSize: 9,
+          fontSize: 12,
           fontWeight: 700,
           color: C.teal,
           letterSpacing: 2,
@@ -1272,7 +1272,7 @@ const ICPFramework = function ICPFramework() {
         }
       }, /*#__PURE__*/React.createElement("div", {
         style: {
-          fontSize: 12.5,
+          fontSize: 15,
           color: C.body,
           lineHeight: 1.45
         }
@@ -1285,7 +1285,7 @@ const ICPFramework = function ICPFramework() {
         }
       }, /*#__PURE__*/React.createElement("span", {
         style: {
-          fontSize: 9,
+          fontSize: 12,
           fontWeight: 600,
           color: C.subtle,
           background: `${C.subtle}10`,
@@ -1295,14 +1295,14 @@ const ICPFramework = function ICPFramework() {
         }
       }, sig.source), /*#__PURE__*/React.createElement("span", {
         style: {
-          fontSize: 9,
+          fontSize: 12,
           fontWeight: 600,
           color: sig.strength === "Primary" ? C.teal : sig.strength === "Negative" ? C.red : C.orange,
           fontFamily: SF
         }
       }, sig.strength), sig.subtype && /*#__PURE__*/React.createElement("span", {
         style: {
-          fontSize: 9,
+          fontSize: 12,
           fontWeight: 600,
           color: C.purple,
           background: `${C.purple}08`,
@@ -1319,7 +1319,7 @@ const ICPFramework = function ICPFramework() {
         }
       }, /*#__PURE__*/React.createElement("span", {
         style: {
-          fontSize: 9,
+          fontSize: 12,
           fontWeight: 700,
           color: C.warm,
           letterSpacing: 1.5,
@@ -1327,13 +1327,13 @@ const ICPFramework = function ICPFramework() {
         }
       }, "MARKETING NOTE: "), /*#__PURE__*/React.createElement("span", {
         style: {
-          fontSize: 12,
+          fontSize: 15,
           color: "rgba(255,255,255,0.8)",
           lineHeight: 1.55
         }
       }, dim.marketingNote)), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
         style: {
-          fontSize: 9,
+          fontSize: 12,
           fontWeight: 700,
           color: C.subtle,
           letterSpacing: 2,
@@ -1351,7 +1351,7 @@ const ICPFramework = function ICPFramework() {
           borderRadius: 6,
           border: `1px solid ${C.light}`,
           background: C.white,
-          fontSize: 12,
+          fontSize: 15,
           fontFamily: "inherit",
           color: C.body,
           resize: "vertical",
@@ -1362,14 +1362,14 @@ const ICPFramework = function ICPFramework() {
     })));
   })), tab === "research" && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
     style: {
-      padding: "16px 20px",
+      padding: "20px 24px",
       background: C.navy,
       borderRadius: 10,
       marginBottom: 20
     }
   }, /*#__PURE__*/React.createElement("div", {
     style: {
-      fontSize: 10,
+      fontSize: 13,
       fontWeight: 700,
       color: C.warm,
       letterSpacing: 2,
@@ -1378,14 +1378,14 @@ const ICPFramework = function ICPFramework() {
     }
   }, "THE 10-MINUTE RESEARCH METHOD"), /*#__PURE__*/React.createElement("div", {
     style: {
-      fontSize: 14,
+      fontSize: 17,
       fontWeight: 700,
       color: C.white,
       marginBottom: 6
     }
   }, `Five sources. Ten minutes. All 10 dimensions scored.`), /*#__PURE__*/React.createElement("div", {
     style: {
-      fontSize: 13,
+      fontSize: 16,
       color: "rgba(255,255,255,0.7)",
       lineHeight: 1.6
     }
@@ -1412,14 +1412,14 @@ const ICPFramework = function ICPFramework() {
       }
     }, /*#__PURE__*/React.createElement("span", {
       style: {
-        fontSize: 10,
+        fontSize: 13,
         fontWeight: 700,
         color: C.white,
         fontFamily: SF
       }
     }, src.timeBox), /*#__PURE__*/React.createElement("span", {
       style: {
-        fontSize: 9,
+        fontSize: 12,
         color: "rgba(255,255,255,0.6)",
         fontFamily: SF
       }
@@ -1443,7 +1443,7 @@ const ICPFramework = function ICPFramework() {
       }
     }, /*#__PURE__*/React.createElement("div", {
       style: {
-        padding: "14px 18px",
+        padding: "18px 22px",
         display: "flex",
         alignItems: "center",
         gap: 12
@@ -1457,7 +1457,7 @@ const ICPFramework = function ICPFramework() {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        fontSize: 16,
+        fontSize: 19,
         color: src.color,
         flexShrink: 0
       }
@@ -1474,13 +1474,13 @@ const ICPFramework = function ICPFramework() {
       }
     }, /*#__PURE__*/React.createElement("span", {
       style: {
-        fontSize: 15,
+        fontSize: 18,
         fontWeight: 700,
         color: C.navy
       }
     }, src.name), /*#__PURE__*/React.createElement("span", {
       style: {
-        fontSize: 10,
+        fontSize: 13,
         fontWeight: 700,
         color: C.white,
         background: src.color,
@@ -1490,7 +1490,7 @@ const ICPFramework = function ICPFramework() {
       }
     }, src.timeBox)), /*#__PURE__*/React.createElement("div", {
       style: {
-        fontSize: 11.5,
+        fontSize: 14,
         color: C.muted
       }
     }, src.source)), /*#__PURE__*/React.createElement("div", {
@@ -1513,7 +1513,7 @@ const ICPFramework = function ICPFramework() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          fontSize: 10,
+          fontSize: 13,
           fontWeight: 700,
           color: hasScore ? sv >= 2 ? C.green : sv >= 1 ? C.orange : C.red : C.subtle,
           fontFamily: SF
@@ -1526,7 +1526,7 @@ const ICPFramework = function ICPFramework() {
       }
     }, /*#__PURE__*/React.createElement("div", {
       style: {
-        fontSize: 12,
+        fontSize: 15,
         color: C.body,
         lineHeight: 1.5,
         padding: "8px 12px",
@@ -1536,7 +1536,7 @@ const ICPFramework = function ICPFramework() {
       }
     }, /*#__PURE__*/React.createElement("span", {
       style: {
-        fontSize: 9,
+        fontSize: 12,
         fontWeight: 700,
         color: src.color,
         letterSpacing: 1.5,
@@ -1557,14 +1557,14 @@ const ICPFramework = function ICPFramework() {
       }
     }, /*#__PURE__*/React.createElement("span", {
       style: {
-        fontSize: 10,
+        fontSize: 13,
         fontWeight: 600,
         color: C.accent,
         fontFamily: SF
       }
     }, isExp ? "Hide" : "Show", " dimension-by-dimension instructions"), /*#__PURE__*/React.createElement("span", {
       style: {
-        fontSize: 9,
+        fontSize: 12,
         color: C.subtle,
         transition: "transform 0.15s",
         transform: isExp ? "rotate(180deg)" : "rotate(0)"
@@ -1572,7 +1572,7 @@ const ICPFramework = function ICPFramework() {
     }, "\u25BE"))), isExp && /*#__PURE__*/React.createElement("div", {
       style: {
         borderTop: `1px dashed ${C.light}`,
-        padding: "14px 18px",
+        padding: "18px 22px",
         background: C.card
       }
     }, /*#__PURE__*/React.createElement("div", {
@@ -1602,20 +1602,20 @@ const ICPFramework = function ICPFramework() {
         }
       }, /*#__PURE__*/React.createElement("span", {
         style: {
-          fontSize: 10,
+          fontSize: 13,
           fontWeight: 700,
           color: tier.color,
           fontFamily: SF
         }
       }, d.number, "."), /*#__PURE__*/React.createElement("span", {
         style: {
-          fontSize: 12.5,
+          fontSize: 15,
           fontWeight: 600,
           color: C.navy
         }
       }, dim.name), hasScore && /*#__PURE__*/React.createElement("span", {
         style: {
-          fontSize: 9,
+          fontSize: 12,
           fontWeight: 700,
           color: scores[d.dimId] >= 2 ? C.green : scores[d.dimId] >= 1 ? C.orange : C.red,
           background: `${scores[d.dimId] >= 2 ? C.green : scores[d.dimId] >= 1 ? C.orange : C.red}10`,
@@ -1630,7 +1630,7 @@ const ICPFramework = function ICPFramework() {
         }
       }, /*#__PURE__*/React.createElement("span", {
         style: {
-          fontSize: 9,
+          fontSize: 12,
           fontWeight: 700,
           color: C.accent,
           letterSpacing: 1.5,
@@ -1638,12 +1638,12 @@ const ICPFramework = function ICPFramework() {
         }
       }, "WHAT TO FIND: "), /*#__PURE__*/React.createElement("span", {
         style: {
-          fontSize: 12,
+          fontSize: 15,
           color: C.body
         }
       }, d.what)), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("span", {
         style: {
-          fontSize: 9,
+          fontSize: 12,
           fontWeight: 700,
           color: src.color,
           letterSpacing: 1.5,
@@ -1651,7 +1651,7 @@ const ICPFramework = function ICPFramework() {
         }
       }, "HOW: "), /*#__PURE__*/React.createElement("span", {
         style: {
-          fontSize: 12,
+          fontSize: 15,
           color: C.body,
           lineHeight: 1.5
         }
@@ -1678,7 +1678,7 @@ const ICPFramework = function ICPFramework() {
         }
       }, /*#__PURE__*/React.createElement("div", {
         style: {
-          fontSize: 10,
+          fontSize: 13,
           fontWeight: 600,
           color: scores[d.dimId] === s.value ? s.value >= 2 ? C.green : s.value >= 1 ? C.orange : C.red : C.subtle,
           fontFamily: SF
@@ -1693,7 +1693,7 @@ const ICPFramework = function ICPFramework() {
       }
     }, /*#__PURE__*/React.createElement("span", {
       style: {
-        fontSize: 9,
+        fontSize: 12,
         fontWeight: 700,
         color: C.warm,
         letterSpacing: 1.5,
@@ -1701,7 +1701,7 @@ const ICPFramework = function ICPFramework() {
       }
     }, "PRO TIP: "), /*#__PURE__*/React.createElement("span", {
       style: {
-        fontSize: 12,
+        fontSize: 15,
         color: "rgba(255,255,255,0.8)",
         lineHeight: 1.55
       }
@@ -1711,19 +1711,19 @@ const ICPFramework = function ICPFramework() {
       background: C.white,
       borderRadius: 10,
       border: `1px solid ${C.light}`,
-      padding: "16px 20px",
+      padding: "20px 24px",
       marginBottom: 24
     }
   }, /*#__PURE__*/React.createElement("div", {
     style: {
-      fontSize: 13,
+      fontSize: 16,
       fontWeight: 700,
       color: C.navy,
       marginBottom: 4
     }
   }, "Coverage Matrix: Which Sources Score Which Dimensions"), /*#__PURE__*/React.createElement("div", {
     style: {
-      fontSize: 11.5,
+      fontSize: 14,
       color: C.muted,
       marginBottom: 14
     }
@@ -1742,9 +1742,9 @@ const ICPFramework = function ICPFramework() {
     }
   }, /*#__PURE__*/React.createElement("div", {
     style: {
-      padding: "8px 10px",
+      padding: "10px 14px",
       background: C.navy,
-      fontSize: 9,
+      fontSize: 12,
       fontWeight: 700,
       color: C.white,
       fontFamily: SF
@@ -1754,7 +1754,7 @@ const ICPFramework = function ICPFramework() {
     style: {
       padding: "8px 6px",
       background: C.navy,
-      fontSize: 8,
+      fontSize: 11,
       fontWeight: 700,
       color: src.color,
       fontFamily: SF,
@@ -1774,14 +1774,14 @@ const ICPFramework = function ICPFramework() {
       }
     }, /*#__PURE__*/React.createElement("span", {
       style: {
-        fontSize: 9,
+        fontSize: 12,
         fontWeight: 700,
         color: tier.color,
         fontFamily: SF
       }
     }, dim.number, "."), /*#__PURE__*/React.createElement("span", {
       style: {
-        fontSize: 10.5,
+        fontSize: 13,
         color: C.navy,
         fontWeight: 500
       }
@@ -1805,19 +1805,19 @@ const ICPFramework = function ICPFramework() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          fontSize: 10,
+          fontSize: 13,
           color: src.color
         }
       }, "\u2713") : /*#__PURE__*/React.createElement("span", {
         style: {
-          fontSize: 10,
+          fontSize: 13,
           color: C.light
         }
       }, "\u2014"));
     })];
   })))), /*#__PURE__*/React.createElement("div", {
     style: {
-      padding: "14px 18px",
+      padding: "18px 22px",
       background: `${C.accent}06`,
       borderRadius: 10,
       border: `1px solid ${C.accent}20`,
@@ -1825,7 +1825,7 @@ const ICPFramework = function ICPFramework() {
     }
   }, /*#__PURE__*/React.createElement("div", {
     style: {
-      fontSize: 9,
+      fontSize: 12,
       fontWeight: 700,
       color: C.accent,
       letterSpacing: 2,
@@ -1834,20 +1834,20 @@ const ICPFramework = function ICPFramework() {
     }
   }, "WHY QUERY TEMPLATES AREN", A, "T BAKED IN"), /*#__PURE__*/React.createElement("div", {
     style: {
-      fontSize: 12.5,
+      fontSize: 15,
       color: C.body,
       lineHeight: 1.6
     }
   }, `Specific search strings (LinkedIn filter URLs, Google dorks, EDGAR query parameters) decay fast ${D} they break when platforms change their UI. This tool teaches the research method: what to look for, where to look, and how to interpret what you find. Maintain current query strings in a separate, quarterly-updated playbook document. The method is stable; the queries are not.`))), tab === "motions" && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
     style: {
-      padding: "16px 20px",
+      padding: "20px 24px",
       background: C.navy,
       borderRadius: 10,
       marginBottom: 20
     }
   }, /*#__PURE__*/React.createElement("div", {
     style: {
-      fontSize: 10,
+      fontSize: 13,
       fontWeight: 700,
       color: C.warm,
       letterSpacing: 2,
@@ -1856,14 +1856,14 @@ const ICPFramework = function ICPFramework() {
     }
   }, "WHO WRITES THE CHECK"), /*#__PURE__*/React.createElement("div", {
     style: {
-      fontSize: 14,
+      fontSize: 17,
       fontWeight: 700,
       color: C.white,
       marginBottom: 6
     }
   }, `The LoB P&L owner is the buyer. Always. The GenAI leader is a route to their budget.`), /*#__PURE__*/React.createElement("div", {
     style: {
-      fontSize: 13,
+      fontSize: 16,
       color: "rgba(255,255,255,0.7)",
       lineHeight: 1.6
     }
@@ -1908,13 +1908,13 @@ const ICPFramework = function ICPFramework() {
     }
   }, /*#__PURE__*/React.createElement("span", {
     style: {
-      fontSize: 16,
+      fontSize: 19,
       fontWeight: 700,
       color: C.navy
     }
   }, m.name), /*#__PURE__*/React.createElement("span", {
     style: {
-      fontSize: 9,
+      fontSize: 12,
       fontWeight: 700,
       color: m.color,
       background: `${m.color}10`,
@@ -1925,7 +1925,7 @@ const ICPFramework = function ICPFramework() {
     }
   }, m.route)), /*#__PURE__*/React.createElement("div", {
     style: {
-      fontSize: 11,
+      fontSize: 14,
       color: m.color,
       fontWeight: 600,
       marginBottom: 6,
@@ -1933,7 +1933,7 @@ const ICPFramework = function ICPFramework() {
     }
   }, m.target), /*#__PURE__*/React.createElement("div", {
     style: {
-      fontSize: 13,
+      fontSize: 16,
       color: C.muted,
       lineHeight: 1.55,
       maxWidth: 600
@@ -1946,7 +1946,7 @@ const ICPFramework = function ICPFramework() {
     }
   }, /*#__PURE__*/React.createElement("div", {
     style: {
-      fontSize: 9,
+      fontSize: 12,
       fontWeight: 700,
       color: m.color,
       letterSpacing: 2,
@@ -1955,14 +1955,14 @@ const ICPFramework = function ICPFramework() {
     }
   }, "BUYER PSYCHOLOGY"), /*#__PURE__*/React.createElement("div", {
     style: {
-      fontSize: 12.5,
+      fontSize: 15,
       color: C.body,
       lineHeight: 1.55,
       fontStyle: "italic"
     }
   }, m.buyerPsychology)), /*#__PURE__*/React.createElement("div", {
     style: {
-      padding: "16px 22px"
+      padding: "20px 26px"
     }
   }, /*#__PURE__*/React.createElement("div", {
     style: {
@@ -1972,7 +1972,7 @@ const ICPFramework = function ICPFramework() {
     }
   }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
     style: {
-      fontSize: 9,
+      fontSize: 12,
       fontWeight: 700,
       color: C.accent,
       letterSpacing: 2,
@@ -2001,20 +2001,20 @@ const ICPFramework = function ICPFramework() {
       }
     }, /*#__PURE__*/React.createElement("span", {
       style: {
-        fontSize: 10,
+        fontSize: 13,
         fontWeight: 700,
         color: tier.color,
         fontFamily: SF
       }
     }, dim.number, "."), /*#__PURE__*/React.createElement("span", {
       style: {
-        fontSize: 12,
+        fontSize: 15,
         color: C.navy,
         fontWeight: 500
       }
     }, dim.name), scores[dId] !== undefined && /*#__PURE__*/React.createElement("span", {
       style: {
-        fontSize: 9,
+        fontSize: 12,
         fontWeight: 600,
         marginLeft: "auto",
         color: scores[dId] >= 2 ? C.green : scores[dId] >= 1 ? C.orange : C.red,
@@ -2023,7 +2023,7 @@ const ICPFramework = function ICPFramework() {
     }, scores[dId], "/3"));
   }))), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
     style: {
-      fontSize: 9,
+      fontSize: 12,
       fontWeight: 700,
       color: m.color,
       letterSpacing: 2,
@@ -2046,13 +2046,13 @@ const ICPFramework = function ICPFramework() {
   }, /*#__PURE__*/React.createElement("span", {
     style: {
       color: m.color,
-      fontSize: 11,
+      fontSize: 14,
       marginTop: 1,
       flexShrink: 0
     }
   }, AR), /*#__PURE__*/React.createElement("span", {
     style: {
-      fontSize: 12,
+      fontSize: 15,
       color: C.body,
       lineHeight: 1.45
     }
@@ -2065,7 +2065,7 @@ const ICPFramework = function ICPFramework() {
     }
   }, /*#__PURE__*/React.createElement("div", {
     style: {
-      fontSize: 10,
+      fontSize: 13,
       fontWeight: 700,
       color: C.warm,
       letterSpacing: 2,
@@ -2074,14 +2074,14 @@ const ICPFramework = function ICPFramework() {
     }
   }, "TWO ROUTES TO ONE BUYER"), /*#__PURE__*/React.createElement("div", {
     style: {
-      fontSize: 15,
+      fontSize: 18,
       fontWeight: 700,
       color: C.white,
       marginBottom: 6
     }
   }, `The P&L owner signs the contract. The only question is whether you reach them directly or through their GenAI leader.`), /*#__PURE__*/React.createElement("div", {
     style: {
-      fontSize: 12.5,
+      fontSize: 15,
       color: "rgba(255,255,255,0.6)",
       marginBottom: 16,
       lineHeight: 1.55
@@ -2102,7 +2102,7 @@ const ICPFramework = function ICPFramework() {
     }
   }, /*#__PURE__*/React.createElement("div", {
     style: {
-      fontSize: 10,
+      fontSize: 13,
       fontWeight: 700,
       color: C.red,
       letterSpacing: 1.5,
@@ -2111,7 +2111,7 @@ const ICPFramework = function ICPFramework() {
     }
   }, "ROUTE 1: DIRECT TO P&L OWNER"), /*#__PURE__*/React.createElement("div", {
     style: {
-      fontSize: 12.5,
+      fontSize: 15,
       color: "rgba(255,255,255,0.75)",
       lineHeight: 1.6,
       marginBottom: 10
@@ -2124,7 +2124,7 @@ const ICPFramework = function ICPFramework() {
     }
   }, /*#__PURE__*/React.createElement("span", {
     style: {
-      fontSize: 9,
+      fontSize: 12,
       fontWeight: 700,
       color: C.warm,
       letterSpacing: 1.5,
@@ -2132,7 +2132,7 @@ const ICPFramework = function ICPFramework() {
     }
   }, "WHEN TO USE: "), /*#__PURE__*/React.createElement("span", {
     style: {
-      fontSize: 11.5,
+      fontSize: 14,
       color: "rgba(255,255,255,0.6)"
     }
   }, `Error economics are publicly visible (fines, incidents, earnings language). Regulatory catalyst is acute. No stalled AI lab signal ${D} the AI initiative may be driven top-down by the P&L owner themselves.`))), /*#__PURE__*/React.createElement("div", {
@@ -2144,7 +2144,7 @@ const ICPFramework = function ICPFramework() {
     }
   }, /*#__PURE__*/React.createElement("div", {
     style: {
-      fontSize: 10,
+      fontSize: 13,
       fontWeight: 700,
       color: C.teal,
       letterSpacing: 1.5,
@@ -2153,7 +2153,7 @@ const ICPFramework = function ICPFramework() {
     }
   }, "ROUTE 2: THROUGH THE GenAI LEADER"), /*#__PURE__*/React.createElement("div", {
     style: {
-      fontSize: 12.5,
+      fontSize: 15,
       color: "rgba(255,255,255,0.75)",
       lineHeight: 1.6,
       marginBottom: 10
@@ -2166,7 +2166,7 @@ const ICPFramework = function ICPFramework() {
     }
   }, /*#__PURE__*/React.createElement("span", {
     style: {
-      fontSize: 9,
+      fontSize: 12,
       fontWeight: 700,
       color: C.warm,
       letterSpacing: 1.5,
@@ -2174,7 +2174,7 @@ const ICPFramework = function ICPFramework() {
     }
   }, "WHEN TO USE: "), /*#__PURE__*/React.createElement("span", {
     style: {
-      fontSize: 11.5,
+      fontSize: 14,
       color: "rgba(255,255,255,0.6)"
     }
   }, `Stalled innovation lab signal is visible. Technical champion is identifiable and active. Evaluation void (hiring builders, not evaluators) is observable in job reqs. The P&L owner may not know the AI project is stuck ${D} the champion needs ammunition.`)))), /*#__PURE__*/React.createElement("div", {
@@ -2186,7 +2186,7 @@ const ICPFramework = function ICPFramework() {
     }
   }, /*#__PURE__*/React.createElement("div", {
     style: {
-      fontSize: 9,
+      fontSize: 12,
       fontWeight: 700,
       color: C.warm,
       letterSpacing: 1.5,
@@ -2195,7 +2195,7 @@ const ICPFramework = function ICPFramework() {
     }
   }, "THE CONVERGENCE POINT"), /*#__PURE__*/React.createElement("div", {
     style: {
-      fontSize: 12.5,
+      fontSize: 15,
       color: "rgba(255,255,255,0.8)",
       lineHeight: 1.6
     }
