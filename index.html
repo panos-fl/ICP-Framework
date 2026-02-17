@@ -23,7 +23,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
 <script>
 const {
-  useState
+  useState,
+  useEffect
 } = React;
 const A = "\u2019";
 const D = "\u2014";
@@ -709,11 +710,39 @@ const motions = [{
 // ══════════════════════════════════════════════════
 
 const ICPFramework = function ICPFramework() {
-  const [scores, setScores] = useState({});
+  const STORAGE_KEY = "icp-framework-data";
+
+  // Load from localStorage on init
+  const loadSaved = () => {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) return JSON.parse(raw);
+    } catch (e) {}
+    return null;
+  };
+  const saved = loadSaved();
+  const [scores, setScores] = useState(saved?.scores || {});
   const [expanded, setExpanded] = useState(null);
-  const [accountName, setAccountName] = useState("");
+  const [accountName, setAccountName] = useState(saved?.accountName || "");
   const [tab, setTab] = useState("dimensions");
-  const [notes, setNotes] = useState({});
+  const [notes, setNotes] = useState(saved?.notes || {});
+  const [saveFlash, setSaveFlash] = useState(false);
+  const [copyFlash, setCopyFlash] = useState(false);
+
+  // Auto-save to localStorage on every change
+  useEffect(() => {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({
+        scores,
+        accountName,
+        notes,
+        savedAt: new Date().toISOString()
+      }));
+      setSaveFlash(true);
+      const t = setTimeout(() => setSaveFlash(false), 1200);
+      return () => clearTimeout(t);
+    } catch (e) {}
+  }, [scores, accountName, notes]);
   const setScore = (id, value) => setScores(prev => ({
     ...prev,
     [id]: value
@@ -722,6 +751,84 @@ const ICPFramework = function ICPFramework() {
     ...prev,
     [id]: text
   }));
+  const clearAll = () => {
+    if (confirm("Clear all scores, notes, and account name? This cannot be undone.")) {
+      setScores({});
+      setNotes({});
+      setAccountName("");
+      try {
+        localStorage.removeItem(STORAGE_KEY);
+      } catch (e) {}
+    }
+  };
+
+  // ── EXPORT HELPERS ──
+
+  const getVerdictText = () => {
+    const sc = Object.keys(scores).length;
+    const vals = dimensions.map(d => scores[d.id]).filter(v => v !== undefined);
+    const avg = vals.length > 0 ? vals.reduce((a, b) => a + b, 0) / vals.length : null;
+    const dq = scores.sme_screen === 0;
+    if (sc < 8) return "INCOMPLETE (" + sc + "/10 scored)";
+    if (dq) return "DISQUALIFIED";
+    if (avg >= 2.2) return "TIER 1 ACCOUNT (avg " + avg.toFixed(1) + ")";
+    if (avg >= 1.5) return "TIER 2 ACCOUNT (avg " + avg.toFixed(1) + ")";
+    return "DEPRIORITIZE (avg " + avg.toFixed(1) + ")";
+  };
+  const buildSummaryRows = () => {
+    return dimensions.map(dim => {
+      const tier = tiers.find(t => t.id === dim.tier);
+      const sc = scores[dim.id];
+      const scoreLabel = sc !== undefined ? dim.scoring.find(s => s.value === sc)?.label || "" : "";
+      return {
+        number: dim.number,
+        name: dim.name,
+        tier: tier.label.split("&")[0].trim(),
+        score: sc !== undefined ? sc : "",
+        scoreLabel,
+        note: notes[dim.id] || ""
+      };
+    });
+  };
+
+  // Copy to clipboard as clean text
+  const copyToClipboard = () => {
+    const rows = buildSummaryRows();
+    const lines = ["ICP ASSESSMENT: " + (accountName || "Unnamed Account"), "Verdict: " + getVerdictText(), "Date: " + new Date().toLocaleDateString(), "", ...rows.map(r => r.number + ". " + r.name + ": " + (r.score !== "" ? r.score + "/3" : "Not scored") + (r.scoreLabel ? " (" + r.scoreLabel + ")" : "") + (r.note ? "\n   Note: " + r.note : ""))];
+    navigator.clipboard.writeText(lines.join("\n")).then(() => {
+      setCopyFlash(true);
+      setTimeout(() => setCopyFlash(false), 2000);
+    });
+  };
+
+  // Export as CSV
+  const exportCSV = () => {
+    const rows = buildSummaryRows();
+    const header = "Dimension #,Dimension Name,Tier,Score (0-3),Score Label,Notes";
+    const csvRows = rows.map(r => [r.number, '"' + r.name + '"', '"' + r.tier + '"', r.score, '"' + r.scoreLabel + '"', '"' + r.note.replace(/"/g, '""') + '"'].join(","));
+    const meta = ["Account," + '"' + (accountName || "Unnamed") + '"', "Verdict," + '"' + getVerdictText() + '"', "Date," + '"' + new Date().toLocaleDateString() + '"', ""];
+    const csv = meta.join("\n") + "\n" + header + "\n" + csvRows.join("\n");
+    const blob = new Blob([csv], {
+      type: "text/csv"
+    });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "icp-assessment-" + (accountName || "account").toLowerCase().replace(/[^a-z0-9]/g, "-") + ".csv";
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  // Export as PDF (print-friendly summary)
+  const exportPDF = () => {
+    const rows = buildSummaryRows();
+    const verdictText = getVerdictText();
+    const html = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>ICP Assessment - ' + (accountName || "Account") + '</title>' + '<style>' + 'body{font-family:Georgia,serif;max-width:800px;margin:40px auto;padding:0 20px;color:#1F2937;line-height:1.6}' + 'h1{font-size:24px;margin:0 0 4px;color:#1B2A4A}' + 'h2{font-size:14px;color:#8B6914;letter-spacing:3px;margin:0 0 8px;font-family:system-ui}' + '.verdict{font-size:18px;font-weight:700;padding:12px 20px;border-radius:8px;margin:16px 0;background:#1B2A4A;color:#fff}' + '.meta{font-size:14px;color:#4B5563;margin-bottom:24px}' + 'table{width:100%;border-collapse:collapse;margin:20px 0;font-size:14px}' + 'th{text-align:left;padding:10px 12px;background:#1B2A4A;color:#fff;font-family:system-ui;font-size:12px;letter-spacing:1px}' + 'td{padding:10px 12px;border-bottom:1px solid #D1D5DB;vertical-align:top}' + 'tr:nth-child(even){background:#F3F4F6}' + '.score{font-weight:700;font-family:system-ui;font-size:16px;text-align:center;width:50px}' + '.score-0{color:#9B2C2C}.score-1{color:#B45309}.score-2{color:#2D6A4F}.score-3{color:#2D6A4F}' + '.note{font-size:12px;color:#4B5563;font-style:italic;margin-top:4px}' + '.tier-label{font-size:11px;color:#6B7280;font-family:system-ui}' + '@media print{body{margin:20px}@page{margin:1cm}}' + '</style></head><body>' + '<h2>ICP ASSESSMENT</h2>' + '<h1>' + (accountName || "Unnamed Account") + '</h1>' + '<div class="meta">Date: ' + new Date().toLocaleDateString() + '</div>' + '<div class="verdict">' + verdictText + '</div>' + '<table><tr><th>#</th><th>DIMENSION</th><th>TIER</th><th>SCORE</th><th>NOTES</th></tr>' + rows.map(r => '<tr>' + '<td style="width:30px;text-align:center">' + r.number + '</td>' + '<td><strong>' + r.name + '</strong>' + (r.scoreLabel ? '<br><span style="font-size:12px;color:#4B5563">' + r.scoreLabel + '</span>' : '') + '</td>' + '<td><span class="tier-label">' + r.tier + '</span></td>' + '<td class="score ' + (r.score !== "" ? "score-" + r.score : "") + '">' + (r.score !== "" ? r.score + "/3" : "\u2014") + '</td>' + '<td>' + (r.note ? '<span class="note">' + r.note.replace(/</g, "&lt;") + '</span>' : '\u2014') + '</td>' + '</tr>').join("") + '</table>' + '<div style="margin-top:32px;padding-top:16px;border-top:1px solid #D1D5DB;font-size:12px;color:#6B7280;font-family:system-ui">' + 'Generated from ICP Framework | Snorkel AI' + '</div></body></html>';
+    const w = window.open("", "_blank");
+    w.document.write(html);
+    w.document.close();
+    setTimeout(() => w.print(), 500);
+  };
   const scored = Object.keys(scores).length;
   const total = dimensions.length;
 
@@ -917,7 +1024,90 @@ const ICPFramework = function ICPFramework() {
       color: C.subtle,
       fontFamily: SF
     }
-  }, scored, "/", total, " scored"))), verdict && /*#__PURE__*/React.createElement("div", {
+  }, scored, "/", total, " scored"), saveFlash && /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 12,
+      color: C.green,
+      fontFamily: SF,
+      transition: "opacity 0.3s",
+      opacity: saveFlash ? 1 : 0
+    }
+  }, "\u2713", " Saved")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginTop: 12,
+      display: "flex",
+      gap: 8,
+      alignItems: "center",
+      flexWrap: "wrap"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    onClick: copyToClipboard,
+    style: {
+      padding: "7px 16px",
+      borderRadius: 6,
+      cursor: "pointer",
+      background: C.white,
+      border: `1px solid ${C.light}`,
+      fontSize: 13,
+      fontWeight: 600,
+      color: C.navy,
+      fontFamily: SF,
+      display: "flex",
+      alignItems: "center",
+      gap: 6,
+      transition: "all 0.15s"
+    }
+  }, copyFlash ? "\u2713 Copied!" : "\u2398 Copy to Clipboard"), /*#__PURE__*/React.createElement("div", {
+    onClick: exportCSV,
+    style: {
+      padding: "7px 16px",
+      borderRadius: 6,
+      cursor: "pointer",
+      background: C.white,
+      border: `1px solid ${C.light}`,
+      fontSize: 13,
+      fontWeight: 600,
+      color: C.navy,
+      fontFamily: SF,
+      display: "flex",
+      alignItems: "center",
+      gap: 6
+    }
+  }, "\u21E9", " Export CSV"), /*#__PURE__*/React.createElement("div", {
+    onClick: exportPDF,
+    style: {
+      padding: "7px 16px",
+      borderRadius: 6,
+      cursor: "pointer",
+      background: C.white,
+      border: `1px solid ${C.light}`,
+      fontSize: 13,
+      fontWeight: 600,
+      color: C.navy,
+      fontFamily: SF,
+      display: "flex",
+      alignItems: "center",
+      gap: 6
+    }
+  }, "\u2399", " Export PDF"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      flex: 1
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    onClick: clearAll,
+    style: {
+      padding: "7px 16px",
+      borderRadius: 6,
+      cursor: "pointer",
+      background: "transparent",
+      border: `1px solid ${C.red}30`,
+      fontSize: 13,
+      fontWeight: 600,
+      color: C.red,
+      fontFamily: SF,
+      opacity: 0.6
+    }
+  }, "Clear All"))), verdict && /*#__PURE__*/React.createElement("div", {
     style: {
       maxWidth: 1080,
       margin: "0 auto 20px",
