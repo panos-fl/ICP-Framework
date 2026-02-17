@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ICP Framework | $1M+ Custom Agents</title>
+<meta name="description" content="Ideal Customer Profile scoring tool for $1M+ custom AI agent engagements">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%231B2A4A'/><text x='16' y='22' font-size='18' text-anchor='middle' fill='%238B6914'>◆</text></svg>">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+  textarea:focus, input:focus, select:focus { outline: 2px solid #8B6914; outline-offset: -1px; }
+  ::selection { background: #8B691430; }
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: #D8DADA; border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: #9CA3AF; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js"></script>
+<script type="text/babel">
+const { useState } = React;
+
+const A = “\u2019”;
+const D = “\u2014”;
+const AR = “\u2192”;
+
+const C = {
+bg: “#FAFAF8”, white: “#FFFFFF”, navy: “#1B2A4A”, body: “#3D3D3D”,
+muted: “#6B7280”, subtle: “#9CA3AF”, light: “#E8E8E4”, card: “#F4F4F2”,
+accent: “#8B6914”, warm: “#C4956A”, green: “#2D6A4F”, red: “#9B2C2C”,
+teal: “#0D6B5E”, purple: “#5B21B6”, orange: “#B45309”,
+};
+const SF = “system-ui, sans-serif”;
+
+// ══════════════════════════════════════════════════
+// ICP DIMENSIONS
+// ══════════════════════════════════════════════════
+
+const tiers = [
+{ id: “firmographic”, label: “Firmographic & Environmental”, subtitle: “The baseline: can they absorb $1M+ and do they structurally have L4 problems?”, color: C.teal, icon: “\u25CB” },
+{ id: “operational”, label: “Operational & Risk Profile”, subtitle: “The problem: is the pain big enough, public enough, and concentrated enough?”, color: C.orange, icon: “\u25C7” },
+{ id: “buying_center”, label: “Penetration Route & Readiness”, subtitle: “The buyer is the P&L owner. These signals tell you which route to their budget and when to engage.”, color: C.purple, icon: “\u25B3” },
+];
+
+const dimensions = [
+// ── TIER 1: FIRMOGRAPHIC ──
+{
+id: “enterprise_scale”,
+tier: “firmographic”,
+number: 1,
+name: “Enterprise Scale”,
+tagline: “The $1M+ Absorber”,
+dimension: “The company must be large enough that a $1M+ engagement is an operational line item, not a bet-the-company board decision.”,
+whyItMatters: “Contract size is a function of problem size. Below a revenue threshold, even real L4 problems don\u2019t generate enough decision volume to justify the golden dataset investment. The contract needs to be < 2% of the problem value, and the problem value needs to exist at scale.”,
+observableSignals: [
+{ signal: “$1B+ annual revenue or 5,000+ employees”, source: “SEC filings, Crunchbase, ZoomInfo”, strength: “Primary” },
+{ signal: “For financial services: AUM, transaction volume, or policy count matters more than headcount”, source: “10-K, AM Best, industry databases”, strength: “Primary” },
+{ signal: “Recent funding rounds > $200M or IPO within 3 years”, source: “Crunchbase, PitchBook”, strength: “Secondary” },
+{ signal: “Multiple business units or divisions with independent P&Ls”, source: “Annual report, org chart research”, strength: “Secondary” },
+],
+scoring: [
+{ value: 0, label: “< $500M revenue”, detail: “Too small. Even a perfect fit on other dimensions won\u2019t produce a $1M contract.” },
+{ value: 1, label: “$500M \u2013 $1B revenue”, detail: “Possible for highly regulated verticals with dense decision volume. Tight.” },
+{ value: 2, label: “$1B \u2013 $10B revenue”, detail: “Sweet spot. Large enough for $1M+ but not so large that procurement takes 18 months.” },
+{ value: 3, label: “$10B+ revenue”, detail: “Enterprise. Multiple agent opportunities across business units. Portfolio play.” },
+],
+marketingNote: “This is a filter, not a message. Don\u2019t talk about company size in outreach. Use it to build the target account list and nothing else.”,
+},
+{
+id: “regulatory_environment”,
+tier: “firmographic”,
+number: 2,
+name: “High-Consequence Regulatory Environment”,
+tagline: “The Audit Driver + Jurisdictional Multiplier”,
+dimension: “They operate in an industry where \u201Cthe AI hallucinated\u201D is a legally indefensible excuse. Multi-jurisdictional operations multiply both regulatory exposure and golden dataset complexity.”,
+whyItMatters: “Regulated companies have a built-in second buyer for the golden dataset: compliance and legal. The dataset isn\u2019t just evaluation infrastructure \u2014 it\u2019s the audit artifact that proves the agent makes defensible decisions. Multi-jurisdictional operations (multi-state insurance, international banking, cross-border energy) exponentially increase decision path complexity, which increases both the problem difficulty and the contract value.”,
+observableSignals: [
+{ signal: “Banking, Insurance, Healthcare/Pharma, Energy/Utilities, Defense”, source: “SIC/NAICS codes, industry classification”, strength: “Primary” },
+{ signal: “Subject to examination regimes: OCC, FDIC, state insurance commissioners, FDA, FERC, NERC”, source: “Regulatory filings, public examination reports”, strength: “Primary” },
+{ signal: “Multi-state or multi-country operations in regulated function”, source: “10-K geographic segments, state licensing databases, AM Best”, strength: “High value” },
+{ signal: “Recent regulatory actions, consent orders, MRAs against competitors”, source: “Regulator websites, industry press”, strength: “Timing signal” },
+],
+scoring: [
+{ value: 0, label: “Unregulated industry”, detail: “No external audit driver. Value story is purely economic \u2014 harder sell at $1M+.” },
+{ value: 1, label: “Lightly regulated or self-regulated”, detail: “Industry standards exist but enforcement is rare. Limited compliance buyer.” },
+{ value: 2, label: “Regulated, single jurisdiction”, detail: “Strong compliance driver. One set of rules to encode.” },
+{ value: 3, label: “Heavily regulated, multi-jurisdictional”, detail: “Maximum complexity. Different correctness criteria by jurisdiction. Highest contract value.” },
+],
+marketingNote: “Multi-jurisdictional is the deal-size multiplier. A carrier writing workers\u2019 comp in 12 states has 12x the decision path complexity of one writing in 1 state. Use this in content: \u201CYour agent needs to know the right answer in California is the wrong answer in Texas.\u201D”,
+},
+{
+id: “economic_catalyst”,
+tier: “firmographic”,
+number: 3,
+name: “Economic Catalyst / Compelling Event”,
+tagline: “The Urgency Creator”,
+dimension: “The business is facing an external pressure that makes their current manual, human-driven processes economically unviable. The specific catalyst determines the conversation.”,
+whyItMatters: “Without a catalyst, you\u2019re selling into a \u201Cnice to have\u201D budget cycle. With one, you\u2019re solving a problem someone is actively being held accountable for. Each catalyst type requires different messaging and different entry points.”,
+observableSignals: [
+{ signal: “M&A activity \u2014 need to consolidate disparate playbooks across legacy orgs”, source: “Press releases, SEC filings, industry news”, strength: “Primary”, subtype: “Playbook Consolidation” },
+{ signal: “Margin compression / earnings misses \u2014 executive pressure to reduce operational cost”, source: “Earnings calls, analyst reports, stock performance”, strength: “Primary”, subtype: “Cost Reduction” },
+{ signal: “Regulatory crackdown \u2014 consent orders, MRAs, new compliance mandates”, source: “Regulator websites, industry press”, strength: “Primary”, subtype: “Audit Defensibility” },
+{ signal: “Hiring freezes or sustained open reqs in target function (6+ months unfilled)”, source: “Job boards, earnings call language about \u201Ccapacity constraints\u201D”, strength: “Primary”, subtype: “Capacity Scaling” },
+{ signal: “Competitor AI failure that made industry news”, source: “Trade press, social media”, strength: “Timing signal”, subtype: “Fear Catalyst” },
+],
+scoring: [
+{ value: 0, label: “No observable catalyst”, detail: “Business as usual. Will evaluate AI \u201Csometime.\u201D Long sales cycle.” },
+{ value: 1, label: “General industry pressure”, detail: “Everyone in the vertical is talking about AI. No company-specific urgency.” },
+{ value: 2, label: “Company-specific catalyst identified”, detail: “Specific event creating pressure. SDR can reference it in outreach.” },
+{ value: 3, label: “Acute, time-bound catalyst”, detail: “Consent order deadline, M&A integration timeline, board mandate. Budget exists now.” },
+],
+marketingNote: “Each sub-type needs different content. M&A \u2192 \u201CHow to merge institutional playbooks into a single evaluation framework.\u201D Margin compression \u2192 \u201CThe ROI of encoding your best 10 people\u2019s judgment into infrastructure.\u201D Regulatory \u2192 \u201CHow the golden dataset becomes your audit artifact.\u201D Don\u2019t create generic \u201CAI transformation\u201D content. Create catalyst-specific content.”,
+},
+
+// ── TIER 2: OPERATIONAL ──
+{
+id: “error_economics”,
+tier: “operational”,
+number: 4,
+name: “Observable Error Economics”,
+tagline: “The Public Downside”,
+dimension: “The cost of failure is massive, public, and asymmetric. False negatives (misses) cost catastrophically more than false positives (over-caution).”,
+whyItMatters: “This is the qualification scorecard\u2019s \u201CError Economics\u201D gate, made observable for marketing. You can\u2019t see internal error rates, but you can see the consequences when errors go public. Companies in industries where errors made headlines are primed for the conversation \u2014 and their boards are asking \u201Ccould this happen to us?\u201D”,
+observableSignals: [
+{ signal: “Company or close competitor hit with regulatory fines in target function”, source: “Regulator enforcement databases, industry press”, strength: “Primary” },
+{ signal: “Class-action lawsuits related to operational errors (bad faith claims, lending discrimination)”, source: “Court records, legal news”, strength: “Primary” },
+{ signal: “Product recalls, patient safety events, or trading losses attributed to process failures”, source: “FDA databases, NTSB, industry press”, strength: “Primary” },
+{ signal: “Industry-level error rate data published by trade associations or regulators”, source: “Trade publications, regulatory reports”, strength: “Secondary” },
+],
+scoring: [
+{ value: 0, label: “Errors are low-cost and recoverable”, detail: “Wrong answer is correctable. No financial, legal, or safety exposure.” },
+{ value: 1, label: “Errors are costly but bounded per incident”, detail: “$10K\u2013$100K per error. Significant but not existential.” },
+{ value: 2, label: “Errors carry regulatory or litigation exposure”, detail: “$100K\u2013$10M per incident. Regulatory scrutiny. Public visibility.” },
+{ value: 3, label: “Errors are existential: consent orders, criminal liability, patient harm”, detail: “$10M+ per incident or personal liability for officers. Board-level concern.” },
+],
+marketingNote: “The air cover campaign. Content for P&L owners and board members: \u201CThe cost of a wrong decision at scale.\u201D Use industry-specific error cost data. Never reference the specific prospect\u2019s incidents in outreach \u2014 reference competitor or industry incidents. Let them connect the dots.”,
+},
+{
+id: “decision_volume”,
+tier: “operational”,
+number: 5,
+name: “Decision Volume & Knowledge Worker Density”,
+tagline: “The ROI Multiplier”,
+dimension: “Two signals that look similar but drive different value stories: headcount tells you about cost reduction opportunity; transaction volume tells you about golden dataset amortization.”,
+whyItMatters: “High headcount in the target function means big cost reduction story. High transaction volume means the golden dataset investment gets amortized across more decisions \u2014 even a marginal accuracy improvement has massive aggregate impact. Best prospects have both.”,
+observableSignals: [
+{ signal: “High concentrations of target titles: Underwriters, Claims Adjusters, Fraud Investigators, Compliance Analysts”, source: “LinkedIn Sales Navigator, ZoomInfo”, strength: “Primary”, subtype: “Headcount (Cost)” },
+{ signal: “Transaction volume disclosed in earnings: policies written, claims processed, applications reviewed”, source: “10-K, earnings calls, investor presentations”, strength: “Primary”, subtype: “Volume (Amortization)” },
+{ signal: “Job postings that stay open 6+ months in target function \u2014 they can\u2019t hire fast enough”, source: “Indeed, LinkedIn, Glassdoor historical”, strength: “High value”, subtype: “Scaling Constraint” },
+{ signal: “BPO or outsourcing contracts for the target function”, source: “Earnings calls, vendor announcements”, strength: “Negative”, subtype: “Caution: may lack internal SMEs” },
+],
+scoring: [
+{ value: 0, label: “< 50 people in target function”, detail: “Low volume. Hard to amortize $1M investment.” },
+{ value: 1, label: “50\u2013200 people OR moderate transaction volume”, detail: “Viable if per-decision value is very high (underwriting, not ticket routing).” },
+{ value: 2, label: “200\u20131,000 people AND high transaction volume”, detail: “Strong economics. Both cost reduction and accuracy improvement stories work.” },
+{ value: 3, label: “1,000+ people OR massive transaction volume with scaling constraint”, detail: “Can\u2019t hire enough humans. Agent isn\u2019t a nice-to-have \u2014 it\u2019s the only way to scale.” },
+],
+marketingNote: “The \u201Cscaling constraint\u201D signal is the most powerful. Companies that literally cannot hire enough qualified people have the most acute problem value. Content angle: \u201CYou can\u2019t hire 200 more senior underwriters. But you can encode your best 10 underwriters\u2019 judgment into infrastructure that scales without headcount.\u201D”,
+},
+{
+id: “tribal_knowledge”,
+tier: “operational”,
+number: 6,
+name: “Multi-Step Tribal Knowledge Workflows”,
+tagline: “The L4 Necessity”,
+dimension: “The core business function requires pulling data, applying a proprietary playbook, and making a highly nuanced decision. The knowledge to judge correctness exists in the heads of a small number of senior people.”,
+whyItMatters: “This is the institutional judgment gate from the qualification scorecard, made observable for marketing. If the \u201Cright answer\u201D depends on this specific company\u2019s policies, risk appetite, and authority structure \u2014 not general domain knowledge \u2014 then the golden dataset is differentiated. If any trained domain expert could evaluate the agent, Scale AI can do it cheaper.”,
+observableSignals: [
+{ signal: “Company markets \u201Ccustomized,\u201D \u201Cwhite-glove,\u201D or \u201Cbespoke\u201D services in the target function”, source: “Company website, marketing materials”, strength: “Primary” },
+{ signal: “Industry has documented retirement cliff or senior talent shortage”, source: “Trade association reports, industry press”, strength: “Primary” },
+{ signal: “Company employs \u201CPrincipal,\u201D \u201CChief,\u201D or \u201CFellow\u201D level domain experts”, source: “LinkedIn, company leadership pages”, strength: “Primary” },
+{ signal: “Complex multi-step processes visible in job descriptions (not just \u201Creview\u201D but \u201Cevaluate, adjudicate, recommend\u201D)”, source: “Job postings for target function”, strength: “Secondary” },
+{ signal: “High employee tenure in target function (10+ year average)”, source: “LinkedIn tenure analysis”, strength: “Secondary” },
+],
+scoring: [
+{ value: 0, label: “Commodity process \u2014 any trained person can do it”, detail: “General domain expertise is sufficient. Not our ICP.” },
+{ value: 1, label: “Some institutional context needed”, detail: “Domain experts need onboarding to company-specific systems. Partially outsourceable.” },
+{ value: 2, label: “Significant proprietary playbook”, detail: “The \u201Cright answer\u201D depends on company-specific policies and authority structures.” },
+{ value: 3, label: “Fragile tribal knowledge in 5\u201315 senior heads”, detail: “Knowledge is undocumented, concentrated, and at risk of loss through retirement or turnover.” },
+],
+marketingNote: “The urgency angle: \u201CYour best underwriter is 58 years old. When she retires, 30 years of institutional judgment walks out the door. The golden dataset is how you keep it.\u201D This resonates with C-suite in a way that \u201CAI accuracy\u201D doesn\u2019t.”,
+},
+
+// ── TIER 3: BUYING CENTER ──
+{
+id: “stalled_lab”,
+tier: “buying_center”,
+number: 7,
+name: “The Stalled Innovation Lab”,
+tagline: “The Second-Wave Buyer”,
+dimension: “They are past the hype cycle. Their Data Science team built GenAI prototypes 12\u201318 months ago, but Legal, Compliance, or P&L owners blocked production deployment because the AI couldn\u2019t be trusted with edge cases.”,
+whyItMatters: “This is the highest-conversion signal in the entire ICP. These companies have budget allocated, have experienced the failure mode firsthand, and have internal political pressure to show results from their AI investment. They don\u2019t need education on why agents are valuable \u2014 they need a methodology that gets past the compliance gate.”,
+observableSignals: [
+{ signal: “Press releases about \u201CGenAI Innovation Labs\u201D or internal GPT tools 12\u201318 months ago, but NO subsequent announcements of core operational deployments”, source: “Company newsroom, Google News archive”, strength: “Primary” },
+{ signal: “Conference talks by their technical leaders about \u201Cchallenges getting AI into production\u201D or \u201Cresponsible AI\u201D”, source: “Conference agendas, YouTube, SlideShare”, strength: “Primary” },
+{ signal: “AI/ML team exists and is well-staffed (50+ data scientists/engineers) but no visible operational AI outcomes”, source: “LinkedIn team analysis”, strength: “Strong” },
+{ signal: “CTO/CDO blog posts or interviews expressing frustration with \u201Clast mile\u201D or \u201Cproduction readiness\u201D”, source: “Company blog, industry publications”, strength: “Strong” },
+],
+scoring: [
+{ value: 0, label: “No AI initiative visible”, detail: “Pre-hype. Need heavy education. Long sales cycle.” },
+{ value: 1, label: “Active AI exploration, early stage”, detail: “Building POCs. Haven\u2019t hit the production wall yet. Will need us in 6\u201312 months.” },
+{ value: 2, label: “Visible AI investment, no production outcomes”, detail: “Stalled. Budget is spent but ROI isn\u2019t showing. Internal pressure mounting.” },
+{ value: 3, label: “Public evidence of production blockers”, detail: “Conference talks about evaluation challenges, compliance gates, or \u201Cresponsible AI.\u201D Maximum receptivity.” },
+],
+marketingNote: “This is where the \u201Cspear\u201D campaign targets. Content for the technical leader: \u201CWhy your RAG chatbot passed the demo but failed the compliance review \u2014 and the evaluation methodology that fixes it.\u201D The message isn\u2019t \u201Cyour team failed\u201D \u2014 it\u2019s \u201Cyour team built the right thing but didn\u2019t have the evaluation infrastructure to prove it.\u201D”,
+},
+{
+id: “technical_champion”,
+tier: “buying_center”,
+number: 8,
+name: “Technical Champion Identification”,
+tagline: “The Trojan Horse + The Evaluation Void”,
+dimension: “Marketing targets the VP of GenAI / CDO \u2014 not by pitching an \u201Cagent,\u201D but by pitching the L4 Golden Dataset and evaluation infrastructure they need to get their own projects past Risk/Compliance. The structural signal: they\u2019re hiring builders but not evaluators.”,
+whyItMatters: “Pitching \u201Cwe build custom agents\u201D triggers Build vs. Buy. Pitching \u201Cwe build the evaluation infrastructure your team needs to get into production\u201D positions you as an enabler of their initiative. The talent mismatch (hiring AI engineers, zero reqs for evaluation/QA) is the most actionable targeting signal in the entire ICP because it\u2019s specific, observable, and predictive.”,
+observableSignals: [
+{ signal: “Hiring for \u201CPrompt Engineers,\u201D \u201CLLM Developers,\u201D \u201CAI Engineers\u201D but ZERO reqs for \u201CAI Quality,\u201D \u201CEvaluation Engineer,\u201D \u201CDomain Ontologist\u201D”, source: “Job boards, company careers page”, strength: “Primary”, subtype: “Structural (targeting)” },
+{ signal: “Technical leaders posting about \u201CAI safety,\u201D \u201CLLM-as-a-judge,\u201D \u201Cgovernance,\u201D \u201Cproduction bottlenecks\u201D”, source: “LinkedIn, Twitter/X, blog posts”, strength: “Primary”, subtype: “Passive (personalization)” },
+{ signal: “VP/SVP of AI, CDO, or Head of Data Science identifiable and active on social”, source: “LinkedIn, conference speaker lists”, strength: “Targeting” },
+{ signal: “Company posting for a new \u201CHead of AI Governance\u201D or \u201CChief AI Officer\u201D role”, source: “Job boards”, strength: “Strong timing signal” },
+],
+scoring: [
+{ value: 0, label: “No technical AI leadership visible”, detail: “No one to champion internally. Need to create demand from scratch.” },
+{ value: 1, label: “AI team exists but no visible evaluation gap”, detail: “They may have evaluation covered, or haven\u2019t hit the wall yet.” },
+{ value: 2, label: “AI team hiring builders, no evaluation roles”, detail: “Classic evaluation void. They don\u2019t know they need it yet \u2014 but they will.” },
+{ value: 3, label: “Technical leader publicly wrestling with production/compliance blockers”, detail: “Maximum receptivity. They know the problem, can\u2019t solve it internally, and need a partner.” },
+],
+marketingNote: “Two campaigns, one persona. (1) Structural signal (job reqs) drives ABM targeting \u2014 add to account list. (2) Passive signal (LinkedIn posts) drives SDR personalization \u2014 reference their specific struggle. Example: \u201CI saw your talk at [conference] about evaluation challenges in production. That\u2019s the exact problem our methodology solves. Here\u2019s how [similar company] got past their compliance gate.\u201D”,
+},
+{
+id: “competitor_displacement”,
+tier: “buying_center”,
+number: 9,
+name: “Competitor Displacement Signal”,
+tagline: “The Failed Incumbent”,
+dimension: “They contracted with a general-purpose AI vendor 12\u201324 months ago and the project is underperforming or quietly dying. They have budget allocated, have experienced the failure mode, and are most receptive to the message that evaluation \u2014 not model selection \u2014 was the actual problem.”,
+whyItMatters: “These are the fastest-closing deals. Budget exists. The problem is validated. The internal champion has political capital at stake. You\u2019re not selling against \u201Cdo nothing\u201D \u2014 you\u2019re selling against a specific, experienced failure. Your message: \u201CThe model wasn\u2019t the problem. The evaluation was.\u201D”,
+observableSignals: [
+{ signal: “Re-emergence of \u201Cbuild\u201D job postings after a period of \u201Cbuy\u201D behavior”, source: “Job board trend analysis over 12\u201324 months”, strength: “Primary” },
+{ signal: “Vendor relationship quietly ending: partner logos disappearing, co-marketing stopping”, source: “Company website archive (Wayback Machine), partner pages”, strength: “Strong” },
+{ signal: “Public statements about \u201Cbringing AI capabilities in-house\u201D or \u201Cbuilding our own\u201D”, source: “Earnings calls, executive interviews, conference talks”, strength: “Strong” },
+{ signal: “AI team restructuring or new leadership after a vendor engagement period”, source: “LinkedIn org changes, press releases”, strength: “Secondary” },
+],
+scoring: [
+{ value: 0, label: “No prior AI vendor engagement visible”, detail: “Greenfield. Longer education cycle but no baggage.” },
+{ value: 1, label: “Active vendor relationship, appears healthy”, detail: “Displacement is hard when incumbent is performing. Monitor.” },
+{ value: 2, label: “Vendor relationship showing strain”, detail: “Quiet indicators of dissatisfaction. Warm lead for outreach.” },
+{ value: 3, label: “Vendor relationship ended or ending, rebuilding internally”, detail: “Maximum receptivity. Budget exists, problem is validated, they know what went wrong.” },
+],
+marketingNote: “Never trash the incumbent by name. The message is: \u201CMost AI vendors optimize the model. But for L4 institutional decisions, the model was never the bottleneck \u2014 the evaluation was. That\u2019s why the project stalled.\u201D Let the prospect fill in the vendor name themselves.”,
+},
+{
+id: “sme_screen”,
+tier: “buying_center”,
+number: 10,
+name: “SME Disqualification Screen”,
+tagline: “The Negative Filter”,
+dimension: “This is not a positive signal \u2014 it\u2019s a disqualification filter. If the company has fully outsourced the core function to BPOs and has no internal senior domain experts, the golden dataset methodology cannot execute regardless of how strong the other 9 dimensions are.”,
+whyItMatters: “The golden dataset requires institutional judgment to build. That judgment must come from the prospect\u2019s own senior people. If those people don\u2019t exist internally, we have no one to encode. This is the #1 execution risk and the hardest to see from the outside \u2014 but there are proxies.”,
+observableSignals: [
+{ signal: “Company employs \u201CPrincipal,\u201D \u201CChief,\u201D or \u201CFellow\u201D level domain experts in target function”, source: “LinkedIn, company leadership page”, strength: “Positive”, subtype: “SMEs exist” },
+{ signal: “Core function is entirely outsourced to BPO providers (Cognizant, TCS, Accenture running the operation)”, source: “Earnings calls, vendor announcements, job posting patterns”, strength: “Negative”, subtype: “DISQUALIFY” },
+{ signal: “Company has a dedicated \u201CCenter of Excellence\u201D or \u201CBest Practices\u201D team for the target function”, source: “LinkedIn, company org announcements”, strength: “Positive”, subtype: “SMEs concentrated” },
+{ signal: “High leadership tenure in target function (VP+ with 10+ years at the company)”, source: “LinkedIn tenure analysis”, strength: “Positive”, subtype: “Institutional memory intact” },
+],
+scoring: [
+{ value: 0, label: “Core function fully outsourced to BPOs”, detail: “DISQUALIFY. No internal SMEs to partner with. Cannot build the golden dataset.” },
+{ value: 1, label: “Partially outsourced, thin internal team”, detail: “Risky. May have enough for Define/Seed phase but timeline will stretch.” },
+{ value: 2, label: “Internal team with identifiable senior experts”, detail: “Standard. SME access is a discovery-call qualification question, not a blocker.” },
+{ value: 3, label: “Deep bench of senior domain experts with long tenure”, detail: “Ideal. Multiple SMEs available. Reduces single-point-of-failure risk.” },
+],
+marketingNote: “Use this to REMOVE accounts from your target list, not to add them. If LinkedIn shows zero senior domain titles and the earnings call mentions BPO partnerships for the target function, deprioritize. You\u2019ll discover SME availability in the qualification call \u2014 this filter just prevents wasting the call.”,
+},
+];
+
+// ── RESEARCH WORKFLOW ──
+const researchSources = [
+{
+id: “sec_filings”,
+name: “SEC / Financial Filings”,
+timeBox: “3 min”,
+color: C.teal,
+icon: “\u25A0”,
+source: “Latest 10-K or Annual Report”,
+howToAccess: “SEC EDGAR \u2192 search company \u2192 10-K filing. Or check the company\u2019s Investor Relations page for the latest annual report PDF. For insurance: also check AM Best or state insurance filings.”,
+dimensionsScored: [
+{ dimId: “enterprise_scale”, number: 1, what: “Revenue, employee count, geographic segments”, how: “Check the first 2 pages of the 10-K for revenue and headcount. Look at \u201CBusiness Segments\u201D section for division structure.” },
+{ dimId: “regulatory_environment”, number: 2, what: “Regulatory bodies mentioned, jurisdictions of operation”, how: “Ctrl+F: \u201Cregulat\u201D \u201Ccompliance\u201D \u201Cexamination\u201D \u201Cconsent\u201D. Check \u201CRisk Factors\u201D section for regulatory exposure. Count states/countries in the geographic segments table.” },
+{ dimId: “economic_catalyst”, number: 3, what: “M&A activity, margin pressure, growth constraints”, how: “Ctrl+F: \u201Cacquisition\u201D \u201Cmerger\u201D \u201Crestructuring\u201D. Check \u201CManagement Discussion & Analysis\u201D for language about margin compression, efficiency initiatives, or hiring constraints.” },
+{ dimId: “error_economics”, number: 4, what: “Disclosed fines, litigation reserves, operational losses”, how: “Ctrl+F: \u201Clitigation\u201D \u201Csettlement\u201D \u201Cfine\u201D \u201Cconsent order\u201D \u201Cremediation\u201D. Check \u201CLegal Proceedings\u201D and \u201CContingencies\u201D sections. Look at footnotes for loss reserves.” },
+{ dimId: “decision_volume”, number: 5, what: “Transaction volume, policies written, claims processed, applications reviewed”, how: “Check \u201COperating Metrics\u201D or \u201CKey Performance Indicators\u201D sections. Also Ctrl+F for \u201Cprocessed\u201D \u201Creviewed\u201D \u201Cadjudicated\u201D \u201Cunderwritten\u201D to find volume disclosures.” },
+],
+proTip: “The 10-K is the single most information-dense source. Read the Risk Factors section carefully \u2014 companies are legally required to disclose what could hurt them. That\u2019s your problem map.”,
+},
+{
+id: “linkedin”,
+name: “LinkedIn Sales Navigator”,
+timeBox: “3 min”,
+color: C.purple,
+icon: “\u25C6”,
+source: “LinkedIn Sales Navigator or LinkedIn Search”,
+howToAccess: “Sales Navigator \u2192 Account search \u2192 filter by company. Use People filters for title searches. Check company page for recent hires and job postings.”,
+dimensionsScored: [
+{ dimId: “decision_volume”, number: 5, what: “Headcount in target function”, how: “Filter people by title keywords for the target function (e.g., \u201Cunderwriter\u201D \u201Cclaims adjuster\u201D \u201Ccompliance analyst\u201D \u201Cfraud investigator\u201D). Count results. Over 200 = strong signal.” },
+{ dimId: “tribal_knowledge”, number: 6, what: “Senior domain experts, tenure patterns”, how: “Filter for \u201CPrincipal\u201D \u201CChief\u201D \u201CFellow\u201D \u201CSenior Director\u201D titles in the target function. Check average tenure of senior people (click through 5-10 profiles). Long tenure (10+ years) = institutional knowledge is deep.” },
+{ dimId: “stalled_lab”, number: 7, what: “AI/ML team size and seniority”, how: “Search \u201Cdata science\u201D \u201Cmachine learning\u201D \u201CAI\u201D titles at the company. If 50+ AI/ML people exist but you find no production AI announcements in their newsroom \u2192 stalled lab signal.” },
+{ dimId: “technical_champion”, number: 8, what: “Evaluation void, identifiable champion”, how: “Check open jobs: search \u201CLlm\u201D \u201Cprompt engineer\u201D \u201CAI engineer\u201D vs. \u201Cevaluation\u201D \u201CAI quality\u201D \u201Contologist\u201D. Lots of builders + zero evaluators = evaluation void. Look for VP/SVP of AI, CDO, Head of Data Science \u2014 check if they post about production challenges.” },
+{ dimId: “sme_screen”, number: 10, what: “SME existence check”, how: “Confirm senior domain experts exist internally (from dim 6 search). If zero senior titles in target function and you see BPO vendor names (Cognizant, TCS, Accenture) heavily represented \u2192 core function may be outsourced. Deprioritize.” },
+],
+proTip: “Do the dim 5 and dim 6 searches in one pass \u2014 same search, different filters. The builder-vs-evaluator check (dim 8) is the single most actionable signal for Route 2 outreach.”,
+},
+{
+id: “newsroom”,
+name: “Company Newsroom + Google News”,
+timeBox: “2 min”,
+color: C.orange,
+icon: “\u25B2”,
+source: “Company website \u201CNews\u201D or \u201CPress\u201D page + Google News search”,
+howToAccess: “Google: \u201C[company name] AI\u201D or \u201C[company name] GenAI\u201D filtered to past 18 months. Also check the company\u2019s own newsroom/blog for AI-related announcements.”,
+dimensionsScored: [
+{ dimId: “economic_catalyst”, number: 3, what: “M&A announcements, earnings language, strategic initiatives”, how: “Search \u201C[company] acquisition\u201D \u201C[company] restructuring\u201D \u201C[company] efficiency\u201D. Check most recent earnings call transcript (available on Seeking Alpha or company IR page) for language about \u201Cautomation\u201D \u201Ccapacity\u201D \u201Coperational efficiency.\u201D” },
+{ dimId: “stalled_lab”, number: 7, what: “AI innovation announcements with no production follow-up”, how: “Search \u201C[company] AI\u201D \u201C[company] GenAI\u201D \u201C[company] innovation lab\u201D. Look for announcements 12-18 months old. Then search for any follow-up production deployment announcements. Gap between hype and deployment = stalled lab.” },
+{ dimId: “technical_champion”, number: 8, what: “Technical leader public statements about AI challenges”, how: “Search \u201C[company] CTO\u201D or \u201C[company] CDO\u201D + \u201CAI\u201D \u201Cproduction\u201D \u201Cgovernance.\u201D Look for conference talks, blog posts, or interviews where they discuss production readiness challenges, responsible AI, or evaluation.” },
+{ dimId: “competitor_displacement”, number: 9, what: “Vendor partnerships that went quiet”, how: “Search \u201C[company] + [known AI vendors: Palantir, C3, DataRobot, etc.]\u201D. Look for partnership announcements. Then check if the partnership page still exists on the company website. Quiet = potential displacement opportunity.” },
+],
+proTip: “The stalled lab signal is the highest-conversion finding. If you find an \u201CAI Innovation Lab\u201D press release from 18 months ago and nothing since \u2014 that\u2019s your Route 2 opening. The VP of AI is under pressure to show ROI.”,
+},
+{
+id: “regulator”,
+name: “Regulator + Legal Databases”,
+timeBox: “1 min”,
+color: C.red,
+icon: “\u25CF”,
+source: “Regulatory enforcement databases, court records”,
+howToAccess: “Banking: OCC Enforcement Actions page, FDIC Enforcement Decisions. Insurance: State insurance commissioner websites. Healthcare: FDA warning letters, CMS enforcement. General: Google \u201C[company] fine\u201D \u201C[company] consent order\u201D \u201C[company] class action.\u201D”,
+dimensionsScored: [
+{ dimId: “regulatory_environment”, number: 2, what: “Active regulatory scrutiny”, how: “Check if the company or close competitors have recent enforcement actions in the target function. For banking: OCC \u2192 Enforcement Actions \u2192 search by institution. For insurance: check state commissioner enforcement pages for the states they operate in.” },
+{ dimId: “error_economics”, number: 4, what: “Public consequences of operational errors”, how: “Google: \u201C[company] fine\u201D \u201C[company] settlement\u201D \u201C[company] consent order.\u201D Also check competitors: \u201C[competitor] [same search]\u201D \u2014 if a competitor was recently fined, the prospect\u2019s board is asking \u201Ccould this happen to us?\u201D” },
+],
+proTip: “This is a binary check. Either there\u2019s a recent action (strong Route 1 trigger) or there isn\u2019t. Don\u2019t spend more than 60 seconds. Competitor enforcement actions are just as valuable as the prospect\u2019s own \u2014 they create the same urgency.”,
+},
+{
+id: “competitive_intel”,
+name: “Vendor / Competitive Intelligence”,
+timeBox: “1 min”,
+color: C.accent,
+icon: “\u25C8”,
+source: “Wayback Machine, company partner pages, job board trend analysis”,
+howToAccess: “Wayback Machine (web.archive.org) \u2192 check company\u2019s partner/technology page over past 12-24 months. Google: \u201C[company] AI partner\u201D or \u201C[company] [known vendor].\u201D Check current job postings for build-vs-buy signals.”,
+dimensionsScored: [
+{ dimId: “competitor_displacement”, number: 9, what: “Failed or ending vendor relationships”, how: “Wayback Machine: load company\u2019s \u201CPartners\u201D or \u201CTechnology\u201D page from 12 months ago vs. today. Missing logos = ended relationships. Google: \u201C[company] + [Palantir/C3/DataRobot/etc.]\u201D for old partnership announcements. Check if they\u2019re now posting AI build roles (re-internalization signal).” },
+{ dimId: “stalled_lab”, number: 7, what: “Build-vs-buy trajectory”, how: “If they announced an AI vendor partnership 12-18 months ago and are now posting for internal AI engineers and data scientists \u2192 the vendor engagement may be failing. Strong Route 2 signal.” },
+],
+proTip: “Never mention the incumbent vendor by name in outreach. The message is always: \u201CThe model wasn\u2019t the problem. The evaluation was.\u201D Let the prospect fill in the vendor name themselves.”,
+},
+];
+
+// ── MARKETING MOTIONS ──
+const motions = [
+{
+name: “Route 1: Direct to P&L Owner”,
+route: “DIRECT”,
+target: “LoB P&L Owner / COO / Business Unit Head”,
+color: C.red,
+description: “Go straight to the person whose P&L is bleeding. Content makes them feel the cost of inaction before the SDR calls. This route works best when the error economics or scaling pressure is acute and publicly visible. The P&L owner doesn\u2019t care about evaluation methodology \u2014 they care about risk, cost, and capacity.”,
+buyerPsychology: “This person thinks in dollars, risk, and capacity. They don\u2019t want to hear about golden datasets or LLM-as-Judge. They want to hear: \u201CYour process costs $14M/year, errors cost $2M/year, and you can\u2019t hire fast enough. Here\u2019s how that changes.\u201D”,
+dimensions: [“error_economics”, “economic_catalyst”, “regulatory_environment”, “decision_volume”],
+contentExamples: [
+“Industry report: \u201CThe $X Billion Cost of Wrong Decisions in [Vertical]\u201D”,
+“Executive brief: \u201CWhy 95% Accuracy Is a Liability, Not an Achievement\u201D”,
+“Case study: \u201CHow [Similar Company] Eliminated $XM in Annual Error Costs\u201D”,
+“ROI calculator: \u201CWhat Would a 5-Point Accuracy Improvement Save Your [Function]?\u201D”,
+],
+},
+{
+name: “Route 2: Through the GenAI Leader”,
+route: “INDIRECT”,
+target: “VP of AI / CDO / Head of Data Science”,
+color: C.teal,
+description: “Arm the technical leader with the evaluation methodology and business case they need to get their stalled project approved by the P&L owner. You\u2019re not selling to this person \u2014 you\u2019re equipping them to sell internally. They become your champion who carries the business case to the budget holder.”,
+buyerPsychology: “This person has spent $2M+ on an AI team, built prototypes that demo well, and is stuck at the compliance/risk gate. They\u2019re under pressure to show ROI on their AI investment. They don\u2019t need another model \u2014 they need the evaluation infrastructure that gets their project into production. Position yourself as the partner who helps them win internally.”,
+dimensions: [“stalled_lab”, “technical_champion”, “tribal_knowledge”],
+contentExamples: [
+“Technical guide: \u201CWhy Your RAG Chatbot Passed the Demo but Failed the Compliance Review\u201D”,
+“Methodology paper: \u201CThe 5-Phase Golden Dataset Process for L4 Institutional Agents\u201D”,
+“Webinar: \u201CHow to Build the Business Case for Production AI When Risk Says No\u201D”,
+“Template: \u201CThe Executive Briefing Deck Your VP of AI Can\u2019t Build Alone\u201D”,
+],
+},
+{
+name: “Trigger-Based Outbound”,
+route: “EITHER ROUTE”,
+target: “Timed to specific events \u2014 targets P&L owner or GenAI leader depending on trigger type”,
+color: C.orange,
+description: “Signal-response outreach within 48 hours of a trigger event. The trigger type determines which route to use: regulatory actions and earnings misses go direct to P&L owner (Route 1). AI failures and vendor churn go to the GenAI leader (Route 2). M&A events can go either way depending on who\u2019s driving integration.”,
+buyerPsychology: “Trigger events create a 2\u20134 week window where the buyer\u2019s attention and urgency peak. After that, it becomes background noise. Speed matters more than polish.”,
+dimensions: [“economic_catalyst”, “error_economics”, “competitor_displacement”],
+contentExamples: [
+“Route 1 trigger: \u201CAfter [consent order / earnings miss], here\u2019s how the companies that avoided this built their evaluation infrastructure.\u201D”,
+“Route 2 trigger: \u201CYour competitor\u2019s AI [failure] made the news. The evaluation, not the model, was the problem. Here\u2019s the methodology that prevents it.\u201D”,
+“Either route: \u201CAfter [M&A announcement], here\u2019s how other acquirers consolidated institutional playbooks into a single evaluation framework.\u201D”,
+],
+},
+];
+
+// ══════════════════════════════════════════════════
+// COMPONENT
+// ══════════════════════════════════════════════════
+
+const ICPFramework = function ICPFramework() {
+const [scores, setScores] = useState({});
+const [expanded, setExpanded] = useState(null);
+const [accountName, setAccountName] = useState(””);
+const [tab, setTab] = useState(“dimensions”);
+const [notes, setNotes] = useState({});
+
+const setScore = (id, value) => setScores(prev => ({ …prev, [id]: value }));
+const setNote = (id, text) => setNotes(prev => ({ …prev, [id]: text }));
+
+const scored = Object.keys(scores).length;
+const total = dimensions.length;
+
+// Compute tier averages
+const tierAvg = (tierId) => {
+const dims = dimensions.filter(d => d.tier === tierId);
+const vals = dims.map(d => scores[d.id]).filter(v => v !== undefined);
+return vals.length > 0 ? (vals.reduce((a, b) => a + b, 0) / vals.length) : null;
+};
+
+// Compute overall
+const allScores = dimensions.map(d => scores[d.id]).filter(v => v !== undefined);
+const overallAvg = allScores.length > 0 ? allScores.reduce((a, b) => a + b, 0) / allScores.length : null;
+
+// Disqualified?
+const disqualified = scores.sme_screen === 0;
+
+// Overall verdict
+let verdict = null;
+let verdictColor = C.muted;
+if (scored >= 8) {
+if (disqualified) {
+verdict = { label: “DISQUALIFIED”, color: C.red, detail: “SME screen failed. Core function is outsourced. Cannot execute golden dataset methodology regardless of other signals.” };
+} else if (overallAvg >= 2.2) {
+verdict = { label: “TIER 1 ACCOUNT”, color: C.green, detail: `Strong fit across all dimensions (${overallAvg.toFixed(1)} avg). Prioritize for immediate outreach. Assign to senior AE.` };
+} else if (overallAvg >= 1.5) {
+verdict = { label: “TIER 2 ACCOUNT”, color: C.orange, detail: `Mixed signals (${overallAvg.toFixed(1)} avg). Monitor for trigger events that strengthen the case. Nurture with content.` };
+} else {
+verdict = { label: “DEPRIORITIZE”, color: C.red, detail: `Weak fit (${overallAvg.toFixed(1)} avg). Insufficient institutional complexity, error cost, or scale to justify $1M+ engagement.` };
+}
+}
+
+return (
+<div style={{ fontFamily: “‘Palatino Linotype’, Palatino, Georgia, serif”, background: C.bg, minHeight: “100vh”, color: C.body, padding: “40px 24px” }}>
+
+```
+  {/* ── HEADER ── */}
+  <div style={{ maxWidth: 920, margin: "0 auto 28px" }}>
+    <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 4, color: C.accent, marginBottom: 10, fontFamily: SF }}>MARKETING STRATEGY</div>
+    <h1 style={{ fontSize: 28, fontWeight: 700, color: C.navy, lineHeight: 1.15, margin: "0 0 6px" }}>Ideal Customer Profile: $1M+ Custom Agents</h1>
+    <p style={{ fontSize: 14, color: C.muted, margin: 0, maxWidth: 700, lineHeight: 1.6 }}>
+      {`10 dimensions across three tiers. Every dimension is observable from the outside or researchable without prospect cooperation.`}
+    </p>
+    <div style={{ marginTop: 12, padding: "12px 16px", background: C.navy, borderRadius: 8 }}>
+      <div style={{ fontSize: 10, fontWeight: 700, color: C.warm, letterSpacing: 2, marginBottom: 4, fontFamily: SF }}>THE BUYER</div>
+      <div style={{ fontSize: 13, color: "rgba(255,255,255,0.85)", lineHeight: 1.6 }}>
+        {`The buyer is always the Line of Business P&L owner ${D} the person accountable for the process the agent automates. Their budget, their problem, their signature. There are two routes to that budget:`}
+      </div>
+      <div style={{ display: "flex", gap: 12, marginTop: 8 }}>
+        <div style={{ flex: 1, padding: "8px 12px", background: "rgba(255,255,255,0.05)", borderRadius: 6, borderLeft: `3px solid ${C.red}` }}>
+          <div style={{ fontSize: 10, fontWeight: 700, color: C.red, fontFamily: SF, marginBottom: 2 }}>ROUTE 1: DIRECT</div>
+          <div style={{ fontSize: 11.5, color: "rgba(255,255,255,0.65)", lineHeight: 1.45 }}>{`Go straight to the P&L owner with the error economics, risk exposure, and cost-of-inaction case.`}</div>
+        </div>
+        <div style={{ flex: 1, padding: "8px 12px", background: "rgba(255,255,255,0.05)", borderRadius: 6, borderLeft: `3px solid ${C.teal}` }}>
+          <div style={{ fontSize: 10, fontWeight: 700, color: C.teal, fontFamily: SF, marginBottom: 2 }}>ROUTE 2: THROUGH THE GenAI LEADER</div>
+          <div style={{ fontSize: 11.5, color: "rgba(255,255,255,0.65)", lineHeight: 1.45 }}>{`Arm the VP of AI / CDO with the evaluation methodology they need to get their stalled project approved. They build the business case to the P&L owner for you.`}</div>
+        </div>
+      </div>
+    </div>
+    <div style={{ marginTop: 14, display: "flex", gap: 12, alignItems: "center" }}>
+      <label style={{ fontSize: 11, fontWeight: 700, color: C.accent, letterSpacing: 2, fontFamily: SF }}>ACCOUNT:</label>
+      <input type="text" value={accountName} onChange={e => setAccountName(e.target.value)} placeholder="Company name"
+        style={{ flex: 1, maxWidth: 280, padding: "8px 14px", borderRadius: 8, border: `1px solid ${C.light}`, background: C.white, fontSize: 14, color: C.navy, fontFamily: "inherit", outline: "none" }} />
+      <span style={{ fontSize: 12, color: C.subtle, fontFamily: SF }}>{scored}/{total} scored</span>
+    </div>
+  </div>
+
+  {/* ── VERDICT ── */}
+  {verdict && (
+    <div style={{ maxWidth: 920, margin: "0 auto 20px", padding: "16px 22px", background: C.navy, borderRadius: 10, borderLeft: `5px solid ${verdict.color}` }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 6 }}>
+        <span style={{ fontSize: 14, fontWeight: 700, color: verdict.color, fontFamily: SF, letterSpacing: 2 }}>{verdict.label}</span>
+        {accountName && <span style={{ fontSize: 13, color: "rgba(255,255,255,0.5)" }}>{accountName}</span>}
+      </div>
+      <div style={{ fontSize: 13, color: "rgba(255,255,255,0.75)", lineHeight: 1.6 }}>{verdict.detail}</div>
+      {verdict.label === "TIER 1 ACCOUNT" && (
+        <div style={{ marginTop: 10, display: "flex", gap: 8 }}>
+          {tiers.map(t => {
+            const avg = tierAvg(t.id);
+            return avg !== null ? (
+              <div key={t.id} style={{ padding: "6px 14px", borderRadius: 6, background: "rgba(255,255,255,0.06)" }}>
+                <span style={{ fontSize: 10, color: t.color, fontWeight: 700, fontFamily: SF }}>{t.label.split("&")[0].trim()}</span>
+                <span style={{ fontSize: 12, color: "rgba(255,255,255,0.6)", marginLeft: 8, fontFamily: SF }}>{avg.toFixed(1)}/3</span>
+              </div>
+            ) : null;
+          })}
+        </div>
+      )}
+    </div>
+  )}
+
+  {/* ── TABS ── */}
+  <div style={{ maxWidth: 920, margin: "0 auto 20px", display: "flex", gap: 4 }}>
+    {[
+      { id: "dimensions", label: "ICP Dimensions" },
+      { id: "motions", label: "Marketing Motions" },
+      { id: "research", label: "10-Min Research Workflow" },
+    ].map(t => (
+      <div key={t.id} onClick={() => setTab(t.id)} style={{ padding: "10px 24px", borderRadius: 8, cursor: "pointer", background: tab === t.id ? C.navy : C.white, color: tab === t.id ? C.white : C.muted, fontSize: 13, fontWeight: 600, fontFamily: SF, border: `1px solid ${tab === t.id ? C.navy : C.light}`, transition: "all 0.15s" }}>
+        {t.label}
+      </div>
+    ))}
+  </div>
+
+  <div style={{ maxWidth: 920, margin: "0 auto" }}>
+
+    {/* ═══════════ DIMENSIONS TAB ═══════════ */}
+    {tab === "dimensions" && (
+      <>
+        {tiers.map(tier => {
+          const tierDims = dimensions.filter(d => d.tier === tier.id);
+          const avg = tierAvg(tier.id);
+          return (
+            <div key={tier.id} style={{ marginBottom: 28 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 4 }}>
+                <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 3, color: tier.color, fontFamily: SF }}>{tier.label.toUpperCase()}</div>
+                <div style={{ flex: 1, height: 1, background: C.light }} />
+                {avg !== null && <div style={{ fontSize: 10, color: tier.color, fontFamily: SF, fontWeight: 600 }}>avg {avg.toFixed(1)}/3</div>}
+              </div>
+              <div style={{ fontSize: 12.5, color: C.muted, marginBottom: 14, lineHeight: 1.55 }}>{tier.subtitle}</div>
+
+              <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                {tierDims.map(dim => {
+                  const isExp = expanded === dim.id;
+                  const hasScore = scores[dim.id] !== undefined;
+                  const scoreVal = scores[dim.id];
+                  const isDQ = dim.id === "sme_screen" && scoreVal === 0;
+                  return (
+                    <div key={dim.id} style={{ background: C.white, borderRadius: 10, border: `1px solid ${isDQ ? `${C.red}40` : isExp ? `${tier.color}30` : C.light}`, overflow: "hidden" }}>
+                      <div style={{ padding: "14px 18px" }}>
+                        {/* Header row */}
+                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 4 }}>
+                          <div style={{ flex: 1 }}>
+                            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 3 }}>
+                              <span style={{ fontSize: 11, fontWeight: 700, color: tier.color, fontFamily: SF }}>{dim.number}.</span>
+                              <span style={{ fontSize: 15, fontWeight: 700, color: C.navy }}>{dim.name}</span>
+                              <span style={{ fontSize: 10, fontWeight: 600, color: C.warm, background: `${C.warm}10`, padding: "2px 8px", borderRadius: 4, fontFamily: SF }}>{dim.tagline}</span>
+                            </div>
+                            <div style={{ fontSize: 12.5, color: C.muted, lineHeight: 1.5, marginLeft: 20 }}>{dim.dimension}</div>
+                          </div>
+                          {hasScore && (
+                            <div style={{ padding: "4px 12px", borderRadius: 6, background: `${scoreVal >= 2 ? C.green : scoreVal >= 1 ? C.orange : C.red}12`, border: `1px solid ${scoreVal >= 2 ? C.green : scoreVal >= 1 ? C.orange : C.red}30`, flexShrink: 0, marginLeft: 12 }}>
+                              <div style={{ fontSize: 12, fontWeight: 700, color: scoreVal >= 2 ? C.green : scoreVal >= 1 ? C.orange : C.red, fontFamily: SF }}>{isDQ ? "DQ" : `${scoreVal}/3`}</div>
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Score buttons */}
+                        <div style={{ display: "flex", gap: 4, marginTop: 10 }}>
+                          {dim.scoring.map(s => (
+                            <div key={s.value} onClick={() => setScore(dim.id, s.value)} style={{
+                              flex: 1, padding: "8px 10px", borderRadius: 6, cursor: "pointer",
+                              background: scoreVal === s.value ? `${s.value >= 2 ? C.green : s.value >= 1 ? C.orange : C.red}10` : C.card,
+                              border: `1.5px solid ${scoreVal === s.value ? (s.value >= 2 ? C.green : s.value >= 1 ? C.orange : C.red) : C.light}`,
+                              transition: "all 0.15s",
+                            }}>
+                              <div style={{ fontSize: 11.5, fontWeight: 600, color: scoreVal === s.value ? (s.value >= 2 ? C.green : s.value >= 1 ? C.orange : C.red) : C.navy, marginBottom: 2 }}>{s.value} {D} {s.label}</div>
+                              <div style={{ fontSize: 10, color: C.muted, lineHeight: 1.4 }}>{s.detail}</div>
+                            </div>
+                          ))}
+                        </div>
+
+                        {/* Expand toggle */}
+                        <div onClick={() => setExpanded(isExp ? null : dim.id)} style={{ display: "flex", alignItems: "center", gap: 6, marginTop: 10, cursor: "pointer" }}>
+                          <span style={{ fontSize: 10, fontWeight: 600, color: C.accent, fontFamily: SF }}>{isExp ? "Hide" : "Show"} signals & strategy</span>
+                          <span style={{ fontSize: 9, color: C.subtle, transition: "transform 0.15s", transform: isExp ? "rotate(180deg)" : "rotate(0)" }}>{"\u25BE"}</span>
+                        </div>
+                      </div>
+
+                      {/* Expanded detail */}
+                      {isExp && (
+                        <div style={{ borderTop: `1px dashed ${C.light}`, padding: "14px 18px", background: C.card }}>
+                          {/* Why it matters */}
+                          <div style={{ marginBottom: 14 }}>
+                            <div style={{ fontSize: 9, fontWeight: 700, color: C.accent, letterSpacing: 2, marginBottom: 6, fontFamily: SF }}>WHY THIS MATTERS</div>
+                            <div style={{ fontSize: 12.5, color: C.body, lineHeight: 1.6 }}>{dim.whyItMatters}</div>
+                          </div>
+
+                          {/* Observable signals */}
+                          <div style={{ marginBottom: 14 }}>
+                            <div style={{ fontSize: 9, fontWeight: 700, color: C.teal, letterSpacing: 2, marginBottom: 8, fontFamily: SF }}>OBSERVABLE SIGNALS</div>
+                            <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                              {dim.observableSignals.map((sig, j) => (
+                                <div key={j} style={{ display: "flex", gap: 10, alignItems: "flex-start", padding: "8px 12px", background: C.white, borderRadius: 6, border: `1px solid ${C.light}` }}>
+                                  <div style={{ width: 3, height: 20, background: sig.strength === "Primary" ? C.teal : sig.strength === "Negative" ? C.red : sig.strength === "Timing signal" ? C.orange : C.accent, borderRadius: 2, flexShrink: 0, marginTop: 2 }} />
+                                  <div style={{ flex: 1 }}>
+                                    <div style={{ fontSize: 12.5, color: C.body, lineHeight: 1.45 }}>{sig.signal}</div>
+                                    <div style={{ display: "flex", gap: 8, marginTop: 3, flexWrap: "wrap" }}>
+                                      <span style={{ fontSize: 9, fontWeight: 600, color: C.subtle, background: `${C.subtle}10`, padding: "2px 6px", borderRadius: 3, fontFamily: SF }}>{sig.source}</span>
+                                      <span style={{ fontSize: 9, fontWeight: 600, color: sig.strength === "Primary" ? C.teal : sig.strength === "Negative" ? C.red : C.orange, fontFamily: SF }}>{sig.strength}</span>
+                                      {sig.subtype && <span style={{ fontSize: 9, fontWeight: 600, color: C.purple, background: `${C.purple}08`, padding: "2px 6px", borderRadius: 3, fontFamily: SF }}>{sig.subtype}</span>}
+                                    </div>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+
+                          {/* Marketing note */}
+                          <div style={{ marginBottom: 12, padding: "10px 14px", background: C.navy, borderRadius: 8 }}>
+                            <span style={{ fontSize: 9, fontWeight: 700, color: C.warm, letterSpacing: 1.5, fontFamily: SF }}>MARKETING NOTE: </span>
+                            <span style={{ fontSize: 12, color: "rgba(255,255,255,0.8)", lineHeight: 1.55 }}>{dim.marketingNote}</span>
+                          </div>
+
+                          {/* Notes */}
+                          <div>
+                            <div style={{ fontSize: 9, fontWeight: 700, color: C.subtle, letterSpacing: 2, marginBottom: 4, fontFamily: SF }}>YOUR NOTES</div>
+                            <textarea value={notes[dim.id] || ""} onChange={e => setNote(dim.id, e.target.value)} placeholder="Account-specific observations..."
+                              style={{ width: "100%", minHeight: 44, padding: "8px 12px", borderRadius: 6, border: `1px solid ${C.light}`, background: C.white, fontSize: 12, fontFamily: "inherit", color: C.body, resize: "vertical", outline: "none", boxSizing: "border-box" }} />
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          );
+        })}
+      </>
+    )}
+
+    {/* ═══════════ RESEARCH WORKFLOW TAB ═══════════ */}
+    {tab === "research" && (
+      <>
+        <div style={{ padding: "16px 20px", background: C.navy, borderRadius: 10, marginBottom: 20 }}>
+          <div style={{ fontSize: 10, fontWeight: 700, color: C.warm, letterSpacing: 2, marginBottom: 6, fontFamily: SF }}>THE 10-MINUTE RESEARCH METHOD</div>
+          <div style={{ fontSize: 14, fontWeight: 700, color: C.white, marginBottom: 6 }}>{`Five sources. Ten minutes. All 10 dimensions scored.`}</div>
+          <div style={{ fontSize: 13, color: "rgba(255,255,255,0.7)", lineHeight: 1.6 }}>
+            {`Research is organized by source, not by dimension. You open the 10-K once and pull signals for five dimensions. You do one LinkedIn session and cover five more. This prevents the most common research mistake: opening the same document four separate times because you${A}re working dimension-by-dimension.`}
+          </div>
+        </div>
+
+        {/* Total time bar */}
+        <div style={{ display: "flex", gap: 2, marginBottom: 20, borderRadius: 8, overflow: "hidden", height: 32 }}>
+          {researchSources.map((src, i) => {
+            const mins = parseInt(src.timeBox);
+            return (
+              <div key={i} style={{ flex: mins, background: src.color, display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}>
+                <span style={{ fontSize: 10, fontWeight: 700, color: C.white, fontFamily: SF }}>{src.timeBox}</span>
+                <span style={{ fontSize: 9, color: "rgba(255,255,255,0.6)", fontFamily: SF }}>{src.name.split("/")[0].split("+")[0].trim()}</span>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Source cards */}
+        <div style={{ display: "flex", flexDirection: "column", gap: 12, marginBottom: 24 }}>
+          {researchSources.map((src) => {
+            const isExp = expanded === `research-${src.id}`;
+            return (
+              <div key={src.id} style={{ background: C.white, borderRadius: 10, border: `1px solid ${isExp ? `${src.color}30` : C.light}`, overflow: "hidden" }}>
+                {/* Source header */}
+                <div style={{ padding: "14px 18px", display: "flex", alignItems: "center", gap: 12 }}>
+                  <div style={{ width: 36, height: 36, borderRadius: 8, background: `${src.color}10`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16, color: src.color, flexShrink: 0 }}>{src.icon}</div>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 2 }}>
+                      <span style={{ fontSize: 15, fontWeight: 700, color: C.navy }}>{src.name}</span>
+                      <span style={{ fontSize: 10, fontWeight: 700, color: C.white, background: src.color, padding: "2px 8px", borderRadius: 4, fontFamily: SF }}>{src.timeBox}</span>
+                    </div>
+                    <div style={{ fontSize: 11.5, color: C.muted }}>{src.source}</div>
+                  </div>
+                  <div style={{ display: "flex", gap: 4, flexShrink: 0 }}>
+                    {src.dimensionsScored.map(d => {
+                      const hasScore = scores[d.dimId] !== undefined;
+                      const sv = scores[d.dimId];
+                      return (
+                        <div key={d.dimId} style={{ width: 24, height: 24, borderRadius: 6, background: hasScore ? `${sv >= 2 ? C.green : sv >= 1 ? C.orange : C.red}15` : C.card, border: `1px solid ${hasScore ? (sv >= 2 ? C.green : sv >= 1 ? C.orange : C.red) : C.light}`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 10, fontWeight: 700, color: hasScore ? (sv >= 2 ? C.green : sv >= 1 ? C.orange : C.red) : C.subtle, fontFamily: SF }}>
+                          {hasScore ? sv : d.number}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* How to access */}
+                <div style={{ padding: "0 18px 10px", marginLeft: 48 }}>
+                  <div style={{ fontSize: 12, color: C.body, lineHeight: 1.5, padding: "8px 12px", background: C.card, borderRadius: 6, border: `1px solid ${C.light}` }}>
+                    <span style={{ fontSize: 9, fontWeight: 700, color: src.color, letterSpacing: 1.5, fontFamily: SF }}>HOW TO ACCESS: </span>
+                    <span>{src.howToAccess}</span>
+                  </div>
+                </div>
+
+                {/* Expand toggle */}
+                <div style={{ padding: "0 18px 12px", marginLeft: 48 }}>
+                  <div onClick={() => setExpanded(isExp ? null : `research-${src.id}`)} style={{ display: "flex", alignItems: "center", gap: 6, cursor: "pointer" }}>
+                    <span style={{ fontSize: 10, fontWeight: 600, color: C.accent, fontFamily: SF }}>{isExp ? "Hide" : "Show"} dimension-by-dimension instructions</span>
+                    <span style={{ fontSize: 9, color: C.subtle, transition: "transform 0.15s", transform: isExp ? "rotate(180deg)" : "rotate(0)" }}>{"\u25BE"}</span>
+                  </div>
+                </div>
+
+                {/* Expanded: per-dimension instructions */}
+                {isExp && (
+                  <div style={{ borderTop: `1px dashed ${C.light}`, padding: "14px 18px", background: C.card }}>
+                    <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                      {src.dimensionsScored.map(d => {
+                        const dim = dimensions.find(dm => dm.id === d.dimId);
+                        const tier = tiers.find(t => t.id === dim.tier);
+                        const hasScore = scores[d.dimId] !== undefined;
+                        return (
+                          <div key={d.dimId} style={{ padding: "10px 14px", background: C.white, borderRadius: 8, border: `1px solid ${C.light}` }}>
+                            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
+                              <span style={{ fontSize: 10, fontWeight: 700, color: tier.color, fontFamily: SF }}>{d.number}.</span>
+                              <span style={{ fontSize: 12.5, fontWeight: 600, color: C.navy }}>{dim.name}</span>
+                              {hasScore && (
+                                <span style={{ fontSize: 9, fontWeight: 700, color: scores[d.dimId] >= 2 ? C.green : scores[d.dimId] >= 1 ? C.orange : C.red, background: `${scores[d.dimId] >= 2 ? C.green : scores[d.dimId] >= 1 ? C.orange : C.red}10`, padding: "2px 6px", borderRadius: 3, marginLeft: "auto", fontFamily: SF }}>{scores[d.dimId]}/3</span>
+                              )}
+                            </div>
+                            <div style={{ marginBottom: 4 }}>
+                              <span style={{ fontSize: 9, fontWeight: 700, color: C.accent, letterSpacing: 1.5, fontFamily: SF }}>WHAT TO FIND: </span>
+                              <span style={{ fontSize: 12, color: C.body }}>{d.what}</span>
+                            </div>
+                            <div>
+                              <span style={{ fontSize: 9, fontWeight: 700, color: src.color, letterSpacing: 1.5, fontFamily: SF }}>HOW: </span>
+                              <span style={{ fontSize: 12, color: C.body, lineHeight: 1.5 }}>{d.how}</span>
+                            </div>
+                            {/* Inline score buttons */}
+                            <div style={{ display: "flex", gap: 3, marginTop: 8 }}>
+                              {dim.scoring.map(s => (
+                                <div key={s.value} onClick={(e) => { e.stopPropagation(); setScore(d.dimId, s.value); }} style={{
+                                  flex: 1, padding: "4px 6px", borderRadius: 4, cursor: "pointer", textAlign: "center",
+                                  background: scores[d.dimId] === s.value ? `${s.value >= 2 ? C.green : s.value >= 1 ? C.orange : C.red}12` : "transparent",
+                                  border: `1px solid ${scores[d.dimId] === s.value ? (s.value >= 2 ? C.green : s.value >= 1 ? C.orange : C.red) : C.light}`,
+                                }}>
+                                  <div style={{ fontSize: 10, fontWeight: 600, color: scores[d.dimId] === s.value ? (s.value >= 2 ? C.green : s.value >= 1 ? C.orange : C.red) : C.subtle, fontFamily: SF }}>{s.value}</div>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+
+                    {/* Pro tip */}
+                    <div style={{ marginTop: 10, padding: "8px 12px", background: C.navy, borderRadius: 6 }}>
+                      <span style={{ fontSize: 9, fontWeight: 700, color: C.warm, letterSpacing: 1.5, fontFamily: SF }}>PRO TIP: </span>
+                      <span style={{ fontSize: 12, color: "rgba(255,255,255,0.8)", lineHeight: 1.55 }}>{src.proTip}</span>
+                    </div>
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Dimension coverage matrix */}
+        <div style={{ background: C.white, borderRadius: 10, border: `1px solid ${C.light}`, padding: "16px 20px", marginBottom: 24 }}>
+          <div style={{ fontSize: 13, fontWeight: 700, color: C.navy, marginBottom: 4 }}>Coverage Matrix: Which Sources Score Which Dimensions</div>
+          <div style={{ fontSize: 11.5, color: C.muted, marginBottom: 14 }}>Every dimension is covered by at least one source. Most are covered by two, giving you cross-validation.</div>
+          <div style={{ overflowX: "auto" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "180px repeat(5, 1fr)", gap: 1, background: C.light, borderRadius: 6, overflow: "hidden" }}>
+              {/* Header row */}
+              <div style={{ padding: "8px 10px", background: C.navy, fontSize: 9, fontWeight: 700, color: C.white, fontFamily: SF }}>DIMENSION</div>
+              {researchSources.map(src => (
+                <div key={src.id} style={{ padding: "8px 6px", background: C.navy, fontSize: 8, fontWeight: 700, color: src.color, fontFamily: SF, textAlign: "center", lineHeight: 1.2 }}>{src.name.split("/")[0].split("+")[0].trim()}</div>
+              ))}
+              {/* Data rows */}
+              {dimensions.map((dim, i) => {
+                const tier = tiers.find(t => t.id === dim.tier);
+                return [
+                  <div key={`label-${i}`} style={{ padding: "6px 10px", background: i % 2 === 0 ? C.white : C.card, display: "flex", alignItems: "center", gap: 4 }}>
+                    <span style={{ fontSize: 9, fontWeight: 700, color: tier.color, fontFamily: SF }}>{dim.number}.</span>
+                    <span style={{ fontSize: 10.5, color: C.navy, fontWeight: 500 }}>{dim.name}</span>
+                  </div>,
+                  ...researchSources.map(src => {
+                    const match = src.dimensionsScored.find(d => d.dimId === dim.id);
+                    return (
+                      <div key={`${src.id}-${dim.id}`} style={{ padding: "6px", background: i % 2 === 0 ? C.white : C.card, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                        {match ? (
+                          <div style={{ width: 16, height: 16, borderRadius: 4, background: `${src.color}15`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 10, color: src.color }}>{"\u2713"}</div>
+                        ) : (
+                          <span style={{ fontSize: 10, color: C.light }}>{"\u2014"}</span>
+                        )}
+                      </div>
+                    );
+                  })
+                ];
+              })}
+            </div>
+          </div>
+        </div>
+
+        {/* Method note */}
+        <div style={{ padding: "14px 18px", background: `${C.accent}06`, borderRadius: 10, border: `1px solid ${C.accent}20`, marginBottom: 24 }}>
+          <div style={{ fontSize: 9, fontWeight: 700, color: C.accent, letterSpacing: 2, marginBottom: 6, fontFamily: SF }}>WHY QUERY TEMPLATES AREN{A}T BAKED IN</div>
+          <div style={{ fontSize: 12.5, color: C.body, lineHeight: 1.6 }}>
+            {`Specific search strings (LinkedIn filter URLs, Google dorks, EDGAR query parameters) decay fast ${D} they break when platforms change their UI. This tool teaches the research method: what to look for, where to look, and how to interpret what you find. Maintain current query strings in a separate, quarterly-updated playbook document. The method is stable; the queries are not.`}
+          </div>
+        </div>
+      </>
+    )}
+
+    {/* ═══════════ MARKETING MOTIONS TAB ═══════════ */}
+    {tab === "motions" && (
+      <>
+        {/* Buyer hierarchy callout */}
+        <div style={{ padding: "16px 20px", background: C.navy, borderRadius: 10, marginBottom: 20 }}>
+          <div style={{ fontSize: 10, fontWeight: 700, color: C.warm, letterSpacing: 2, marginBottom: 6, fontFamily: SF }}>WHO WRITES THE CHECK</div>
+          <div style={{ fontSize: 14, fontWeight: 700, color: C.white, marginBottom: 6 }}>{`The LoB P&L owner is the buyer. Always. The GenAI leader is a route to their budget.`}</div>
+          <div style={{ fontSize: 13, color: "rgba(255,255,255,0.7)", lineHeight: 1.6 }}>
+            {`The P&L owner owns the process the agent automates. The error costs hit their P&L. The capacity constraints limit their growth. The $1M contract comes from their budget. The VP of AI / CDO is not the buyer ${D} they${A}re the internal champion who helps you build the business case to the buyer. Two routes, one destination.`}
+          </div>
+        </div>
+
+        <div style={{ display: "flex", flexDirection: "column", gap: 16, marginBottom: 28 }}>
+          {motions.map((m, i) => (
+            <div key={i} style={{ background: C.white, borderRadius: 12, border: `1px solid ${C.light}`, overflow: "hidden" }}>
+              <div style={{ padding: "18px 22px", borderBottom: `1px solid ${C.light}`, background: `${m.color}04` }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 4, flexWrap: "wrap" }}>
+                      <span style={{ fontSize: 16, fontWeight: 700, color: C.navy }}>{m.name}</span>
+                      <span style={{ fontSize: 9, fontWeight: 700, color: m.color, background: `${m.color}10`, padding: "3px 10px", borderRadius: 4, fontFamily: SF, letterSpacing: 1.5 }}>{m.route}</span>
+                    </div>
+                    <div style={{ fontSize: 11, color: m.color, fontWeight: 600, marginBottom: 6, fontFamily: SF }}>{m.target}</div>
+                    <div style={{ fontSize: 13, color: C.muted, lineHeight: 1.55, maxWidth: 600 }}>{m.description}</div>
+                  </div>
+                </div>
+              </div>
+              {/* Buyer psychology */}
+              <div style={{ padding: "12px 22px", background: `${m.color}03`, borderBottom: `1px solid ${C.light}` }}>
+                <div style={{ fontSize: 9, fontWeight: 700, color: m.color, letterSpacing: 2, marginBottom: 4, fontFamily: SF }}>BUYER PSYCHOLOGY</div>
+                <div style={{ fontSize: 12.5, color: C.body, lineHeight: 1.55, fontStyle: "italic" }}>{m.buyerPsychology}</div>
+              </div>
+              <div style={{ padding: "16px 22px" }}>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+                  {/* Linked dimensions */}
+                  <div>
+                    <div style={{ fontSize: 9, fontWeight: 700, color: C.accent, letterSpacing: 2, marginBottom: 8, fontFamily: SF }}>ICP DIMENSIONS THAT FEED THIS MOTION</div>
+                    <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+                      {m.dimensions.map(dId => {
+                        const dim = dimensions.find(d => d.id === dId);
+                        const tier = tiers.find(t => t.id === dim.tier);
+                        return (
+                          <div key={dId} style={{ display: "flex", gap: 8, alignItems: "center", padding: "6px 10px", borderRadius: 6, background: C.card, border: `1px solid ${C.light}` }}>
+                            <span style={{ fontSize: 10, fontWeight: 700, color: tier.color, fontFamily: SF }}>{dim.number}.</span>
+                            <span style={{ fontSize: 12, color: C.navy, fontWeight: 500 }}>{dim.name}</span>
+                            {scores[dId] !== undefined && (
+                              <span style={{ fontSize: 9, fontWeight: 600, marginLeft: "auto", color: scores[dId] >= 2 ? C.green : scores[dId] >= 1 ? C.orange : C.red, fontFamily: SF }}>{scores[dId]}/3</span>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  {/* Content examples */}
+                  <div>
+                    <div style={{ fontSize: 9, fontWeight: 700, color: m.color, letterSpacing: 2, marginBottom: 8, fontFamily: SF }}>CONTENT EXAMPLES</div>
+                    <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+                      {m.contentExamples.map((ex, j) => (
+                        <div key={j} style={{ display: "flex", gap: 8, alignItems: "flex-start" }}>
+                          <span style={{ color: m.color, fontSize: 11, marginTop: 1, flexShrink: 0 }}>{AR}</span>
+                          <span style={{ fontSize: 12, color: C.body, lineHeight: 1.45 }}>{ex}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* ── TWO ROUTES TO ONE BUYER ── */}
+        <div style={{ padding: "20px 24px", background: C.navy, borderRadius: 12, marginBottom: 24 }}>
+          <div style={{ fontSize: 10, fontWeight: 700, color: C.warm, letterSpacing: 2, marginBottom: 10, fontFamily: SF }}>TWO ROUTES TO ONE BUYER</div>
+          <div style={{ fontSize: 15, fontWeight: 700, color: C.white, marginBottom: 6 }}>{`The P&L owner signs the contract. The only question is whether you reach them directly or through their GenAI leader.`}</div>
+          <div style={{ fontSize: 12.5, color: "rgba(255,255,255,0.6)", marginBottom: 16, lineHeight: 1.55 }}>
+            {`Choose the route based on what${A}s observable. If the error economics or regulatory pressure is publicly visible, go direct (Route 1). If the company has a stalled AI initiative and an identifiable technical champion, go indirect (Route 2). Both routes converge on the same person and the same budget.`}
+          </div>
+
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginBottom: 16 }}>
+            <div style={{ padding: "16px 18px", background: "rgba(255,255,255,0.04)", borderRadius: 10, borderTop: `3px solid ${C.red}` }}>
+              <div style={{ fontSize: 10, fontWeight: 700, color: C.red, letterSpacing: 1.5, marginBottom: 8, fontFamily: SF }}>ROUTE 1: DIRECT TO P&L OWNER</div>
+              <div style={{ fontSize: 12.5, color: "rgba(255,255,255,0.75)", lineHeight: 1.6, marginBottom: 10 }}>
+                {`Lead with the business problem: error costs, regulatory exposure, capacity constraints, margin pressure. The P&L owner doesn${A}t need to understand golden datasets ${D} they need to understand that wrong decisions are costing them $X million/year and that a rigorous evaluation methodology is the only way to automate safely.`}
+              </div>
+              <div style={{ padding: "8px 12px", background: "rgba(255,255,255,0.04)", borderRadius: 6 }}>
+                <span style={{ fontSize: 9, fontWeight: 700, color: C.warm, letterSpacing: 1.5, fontFamily: SF }}>WHEN TO USE: </span>
+                <span style={{ fontSize: 11.5, color: "rgba(255,255,255,0.6)" }}>{`Error economics are publicly visible (fines, incidents, earnings language). Regulatory catalyst is acute. No stalled AI lab signal ${D} the AI initiative may be driven top-down by the P&L owner themselves.`}</span>
+              </div>
+            </div>
+            <div style={{ padding: "16px 18px", background: "rgba(255,255,255,0.04)", borderRadius: 10, borderTop: `3px solid ${C.teal}` }}>
+              <div style={{ fontSize: 10, fontWeight: 700, color: C.teal, letterSpacing: 1.5, marginBottom: 8, fontFamily: SF }}>ROUTE 2: THROUGH THE GenAI LEADER</div>
+              <div style={{ fontSize: 12.5, color: "rgba(255,255,255,0.75)", lineHeight: 1.6, marginBottom: 10 }}>
+                {`Arm the VP of AI with the evaluation methodology and business case they need. Your role: help them build the internal pitch to their P&L owner. The golden dataset isn${A}t a cost ${D} it${A}s the audit artifact that gets their stalled $2M AI investment into production. They carry the business case; the P&L owner signs the check.`}
+              </div>
+              <div style={{ padding: "8px 12px", background: "rgba(255,255,255,0.04)", borderRadius: 6 }}>
+                <span style={{ fontSize: 9, fontWeight: 700, color: C.warm, letterSpacing: 1.5, fontFamily: SF }}>WHEN TO USE: </span>
+                <span style={{ fontSize: 11.5, color: "rgba(255,255,255,0.6)" }}>{`Stalled innovation lab signal is visible. Technical champion is identifiable and active. Evaluation void (hiring builders, not evaluators) is observable in job reqs. The P&L owner may not know the AI project is stuck ${D} the champion needs ammunition.`}</span>
+              </div>
+            </div>
+          </div>
+
+          <div style={{ padding: "12px 16px", background: "rgba(139,105,20,0.12)", borderRadius: 8, borderLeft: `3px solid ${C.warm}` }}>
+            <div style={{ fontSize: 9, fontWeight: 700, color: C.warm, letterSpacing: 1.5, marginBottom: 4, fontFamily: SF }}>THE CONVERGENCE POINT</div>
+            <div style={{ fontSize: 12.5, color: "rgba(255,255,255,0.8)", lineHeight: 1.6 }}>
+              {`Both routes end in the same room: the P&L owner, their GenAI leader, and your team, aligning on the business case for a $1M+ engagement. Route 1 gets there faster when the P&L owner already feels the pain. Route 2 gets there more reliably when the pain is operational (the AI team is stuck) rather than financial (the P&L is bleeding). In practice, run both routes simultaneously on Tier 1 accounts ${D} content warms the P&L owner while the SDR arms the technical champion.`}
+            </div>
+          </div>
+        </div>
+      </>
+    )}
+
+  </div>
+</div>
+```
+
+);
+}
+
+ReactDOM.createRoot(document.getElementById(‘root’)).render(<ICPFramework />);
+</script>
+
+</body>
+</html>
